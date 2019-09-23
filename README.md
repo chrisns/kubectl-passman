@@ -62,7 +62,7 @@ I :heart: contributions, it'd be great if you could add support for your favouri
 
 ## TODO
 
-- [ ] rename project ~~k8s-user-passmanager~~ kubectl-passman to math a compatible named binary
+- [x] rename project ~~k8s-user-passmanager~~ kubectl-passman to math a compatible named binary
 - [x] skeleton readme doc
 - [ ] store and retrieve tokens
   - [ ] from osx keychain

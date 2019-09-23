@@ -17,7 +17,7 @@ users:
 
 ### Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.doc` on their desktop?
 
-## Then you need kubectl-passman!
+## Then you need kubectl-passman :thumbsup:!
 
 > a suggestion of a better name is very welcome, it's not too late to change!
 

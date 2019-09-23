@@ -78,6 +78,7 @@ I :heart: contributions, it'd be great if you could add support for your favouri
     - [ ] in *nix
 - [ ] validate that kubectl is official signed build before executing
 - [ ] CI/CD/CD
+  - [ ] lint
   - [ ] test
   - [ ] build
     - [ ] osx

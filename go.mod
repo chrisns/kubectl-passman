@@ -1,4 +1,4 @@
-module github.com/chrisns/k8s-user-passmanager
+module github.com/chrisns/kubectl-passman
 
 go 1.13
 

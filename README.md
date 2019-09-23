@@ -1,4 +1,4 @@
-# k8s user password manager glue
+# kubectl user password manager glue
 
 ### Does your `~/.kube/config` look like this:
 ```yaml
@@ -17,7 +17,7 @@ users:
 
 ### Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.doc` on their desktop?
 
-## Then you need k8s-user-passmanager!
+## Then you need kubectl-passman!
 
 > a suggestion of a better name is very welcome, it's not too late to change!
 
@@ -62,6 +62,7 @@ I :heart: contributions, it'd be great if you could add support for your favouri
 
 ## TODO
 
+- [ ] rename project ~~k8s-user-passmanager~~ kubectl-passman to math a compatible named binary
 - [x] skeleton readme doc
 - [ ] store and retrieve tokens
   - [ ] from osx keychain

@@ -6,9 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_fail(t *testing.T) {
-	assert.True(t, false)
-}
-func Test_true(t *testing.T) {
-	assert.True(t, false)
+func Test_returnResponse(t *testing.T) {
+	assert.Equal(t, `{"apiVersion": "client.authentication.k8s.io/v1beta1","kind": "ExecCredential","status": {"token": "my-bearer-token"}}`, returnResponse())
 }

@@ -106,11 +106,12 @@ I :heart: contributions, it'd be great if you could add support for your favouri
 - [ ] validate that kubectl is official signed build before executing
 - [ ] CI/CD/CD
   - [ ] test
-  - [ ] build
+  - [ ] build binaries
     - [ ] osx
     - [ ] *nix
     - [ ] windows
-    - [ ] docker?
+    - [ ] x86?
     - [ ] arm?
-  - [ ] publish to github releases
+    - [ ] docker?
+  - [ ] publish binaries to github releases
   - [ ] cli interface for abstracting creating new credentials in your password manager e.g. `kubectl passman keychain create [item name] --token=[my token]`

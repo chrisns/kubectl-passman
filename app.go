@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-
 	fmt.Println(returnResponse())
 }
 
@@ -24,7 +23,11 @@ type response struct {
 func returnResponse() string {
 	res1D := &response{}
 
-	defaults.Set(res1D)
-	res1B, _ := json.Marshal(res1D)
-	return string(res1B)
+	return formatResponse(res1D)
+}
+
+func formatResponse(res *response) string {
+	defaults.Set(res)
+	jsonResponse, _ := json.Marshal(res)
+	return string(jsonResponse)
 }

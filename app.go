@@ -29,10 +29,9 @@ func keychainFetcher(serviceLabel string) string {
 	results, err := keychain.QueryItem(query)
 	if err != nil {
 		fmt.Println("err", err)
-		os.Exit(1)
+		panic("unable to connect to keychain")
 	} else if len(results) != 1 {
-		fmt.Println("no found")
-		os.Exit(1)
+		panic("item doesn't exist")
 	}
 	password := string(results[0].Data)
 	return password
@@ -47,12 +46,6 @@ type response struct {
 	APIVersion string         `default:"client.authentication.k8s.io/v1beta1" json:"apiVersion"`
 	Kind       string         `default:"ExecCredential" json:"kind"`
 	Status     responseStatus `json:"status"`
-}
-
-func returnResponse() string {
-	res1D := &response{}
-
-	return formatResponse(res1D)
 }
 
 func formatResponse(res *response) string {

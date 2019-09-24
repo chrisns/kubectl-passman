@@ -15,9 +15,7 @@ users:
     client-key-data: <REAL PRIVATE KEY!>
 ```
 
-## :scream: :scream: :scream: :scream:<br/><br/>Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.doc` on their desktop?
-
-## Then you need kubectl-passman :thumbsup:!
+## :scream: :scream: :scream: :scream:<br/><br/>Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.doc` on their desktop? <br/><br/> Then you need kubectl-passman!
 
 > a suggestion of a better name is very welcome, it's not too late to change!
 
@@ -25,16 +23,8 @@ What this `kubectl` plugin does is glue your kubectl config to a common password
 
 ## Installation
 
-### Mac OS X/Unix/Linux
-
 ```bash
 go install github.com/chrisns/kubectl-passman
-```
-
-### Windows
-
-```powershell
-TODO:
 ```
 
 ## Usage

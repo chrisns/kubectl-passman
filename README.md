@@ -25,10 +25,10 @@ What this `kubectl` plugin does is glue your kubectl config to a common password
 
 ## Installation
 
-### Mac OS X
+### Mac OS X/Unix/Linux
 
 ```bash
-TODO:
+go install github.com/chrisns/kubectl-passman
 ```
 
 ### Windows
@@ -37,16 +37,9 @@ TODO:
 TODO:
 ```
 
-### Unix
+## Usage
 
-```bash
-TODO:
-```
-
-### Usage
-
-<details><summary>macOS Keychain</summary>
-<p>
+### macOS Keychain
 
 You need to JSON encode the credentials so that should look something like:
 
@@ -83,9 +76,7 @@ users:
           - keychain
           - kubectl-prod-user
 ```
-
-</p>
-</details>
+---
 
 ## Compiling
 

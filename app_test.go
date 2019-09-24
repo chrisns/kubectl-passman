@@ -30,3 +30,11 @@ func Test_formatResponse_override_defaults(t *testing.T) {
 	}
 	assert.Contains(t, formatResponse(dummyResponse), `"kind":"foo"`)
 }
+
+func Test_keychainFetcher_NoKeychainError(t *testing.T)  {}
+func Test_keychainFetcher_NoItemFoundError(t *testing.T) {}
+func Test_keychainFetcher_ItemFound(t *testing.T) {
+	t.Parallel()
+	// TODO: need to figure out mocking
+	// assert.Contains(t, keychainFetcher("gabriel"), "END CERTIFICATE")
+}

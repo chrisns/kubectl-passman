@@ -1,6 +1,7 @@
 # kubectl user password manager glue
 
 ### Does your `~/.kube/config` look like this:
+
 ```yaml
 apiVersion: v1
 kind: Config
@@ -13,9 +14,8 @@ users:
     client-certificate-data: <REAL CERT!>
     client-key-data: <REAL PRIVATE KEY!>
 ```
-# :scream: :scream: :scream: :scream:
 
-## Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.doc` on their desktop?
+## :scream: :scream: :scream: :scream:<br/><br/>Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.doc` on their desktop?
 
 ## Then you need kubectl-passman!
 
@@ -76,7 +76,6 @@ users:
           - keychain
           - kubectl-prod-user
 ```
----
 
 ## Compiling
 
@@ -85,6 +84,7 @@ go build
 ```
 
 ## Contributing
+
 I :heart: contributions, it'd be great if you could add support for your favourite password manager, work on something from the [TODO](#TODO) or any open issues as a priority, but anything else that takes your fancy too is great, though best to raise an issue to discuss before investing time into it.
 
 ## TODO

@@ -29,7 +29,7 @@ go install github.com/chrisns/kubectl-passman
 
 ## Usage
 
-### macOS Keychain
+### Shared 
 
 You need to JSON encode the credentials so that should look something like:
 
@@ -46,9 +46,16 @@ or for a key pair:
 }
 ```
 
-You then place this in a keychain item, call it whatever you like but keep the account name and item name the same.
+### macOS Keychain
+
+You then place the json encoded string in a keychain item, call it whatever you like but keep the account name and item name the same.
+
+#### Keypair
 
 ![Screenshot of adding a keypair](resources/osxkeychain-keypair.png)
+
+#### Token
+
 ![Screenshot of adding a token](resources/osxkeychain-token.png)
 
 Then add it to the `~/.kube/config`:
@@ -64,6 +71,36 @@ users:
         apiVersion: "client.authentication.k8s.io/v1beta1"
         args:
           - keychain
+          - kubectl-prod-user
+```
+
+### 1Password
+
+You will need the [1Password commandline client installed and configured](https://1password.com/downloads/command-line/). I'm really not sure on how to best handle the session token, storing it in your `~/.kube/config` would probably be even worse than the secret to start with.
+
+You then place the json encoded string in a 1password login item, call it whatever you like
+
+#### Keypair
+
+![Screenshot of adding a keypair](resources/1password-keypair.png)
+
+#### Token
+
+![Screenshot of adding a token](resources/1password-token.png)
+
+Then add it to the `~/.kube/config`:
+
+```yaml
+apiVersion: v1
+kind: Config
+users:
+- name: my-prod-user
+    user:
+      exec:
+        command: "kubectl-passman"
+        apiVersion: "client.authentication.k8s.io/v1beta1"
+        args:
+          - "1password"
           - kubectl-prod-user
 ```
 
@@ -83,16 +120,16 @@ I :heart: contributions, it'd be great if you could add support for your favouri
 - [x] skeleton readme doc
 - [ ] retrieve tokens
   - [x] from osx keychain
-  - [ ] from 1Password
-    - [ ] in os x
-    - [ ] in windows
-    - [ ] in *nix
+  - [x] from 1Password
+    - [x] in os x
+    - [x] in windows
+    - [x] in *nix
 - [ ] retrieve cert key/pair
   - [x] from osx keychain
-  - [ ] from 1Password
-    - [ ] in os x
-    - [ ] in windows
-    - [ ] in *nix
+  - [x] from 1Password
+    - [x] in os x
+    - [x] in windows
+    - [x] in *nix
 - [ ] validate that kubectl is official signed build before executing
 - [ ] CI/CD/CD
   - [ ] lint

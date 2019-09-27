@@ -1,6 +1,7 @@
 # kubectl user password manager glue
 
 ### Does your `~/.kube/config` look like this:
+
 ```yaml
 apiVersion: v1
 kind: Config
@@ -13,9 +14,8 @@ users:
     client-certificate-data: <REAL CERT!>
     client-key-data: <REAL PRIVATE KEY!>
 ```
-# :scream: :scream: :scream: :scream:
 
-### Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.doc` on their desktop?
+## :scream: :scream: :scream: :scream:<br/><br/>Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.doc` on their desktop?
 
 ## Then you need kubectl-passman :thumbsup:!
 
@@ -25,53 +25,80 @@ What this `kubectl` plugin does is glue your kubectl config to a common password
 
 ## Installation
 
-### Mac OS X
+### Mac OS X/Unix/Linux
 
 ```bash
-TODO:
+go install github.com/chrisns/kubectl-passman
 ```
+
 ### Windows
 
 ```powershell
 TODO:
 ```
 
-### Unix
+## Usage
 
-```bash
-TODO:
+### macOS Keychain
+
+You need to JSON encode the credentials so that should look something like:
+
+```json
+{"token":"some-token"}
 ```
 
-### Usage
+or for a key pair:
 
-#### Adding your keys/tokens to your password manager
+```json
+{
+  "clientCertificateData":"-----BEGIN CERTIFICATE-----\nMIIC9DCCA.......-----END CERTIFICATE-----",
+  "clientKeyData":"-----BEGIN RSA PRIVATE KEY-----\nMIIE......-----END RSA PRIVATE KEY-----"
+}
+```
 
-#### What your `~/.kube/config` should look like
+You then place this in a keychain item, call it whatever you like but keep the account name and item name the same.
+
+![Screenshot of adding a keypair](resources/osxkeychain-keypair.png)
+![Screenshot of adding a token](resources/osxkeychain-token.png)
+
+Then add it to the `~/.kube/config`:
 
 ```yaml
-TODO:
+apiVersion: v1
+kind: Config
+users:
+- name: my-prod-user
+    user:
+      exec:
+        command: "kubectl-passman"
+        apiVersion: "client.authentication.k8s.io/v1beta1"
+        args:
+          - keychain
+          - kubectl-prod-user
 ```
 
 ## Compiling
+
 ``` bash
-TODO: 
+go build
 ```
 
 ## Contributing
+
 I :heart: contributions, it'd be great if you could add support for your favourite password manager, work on something from the [TODO](#TODO) or any open issues as a priority, but anything else that takes your fancy too is great, though best to raise an issue to discuss before investing time into it.
 
 ## TODO
 
 - [x] rename project ~~k8s-user-passmanager~~ kubectl-passman to math a compatible named binary
 - [x] skeleton readme doc
-- [ ] store and retrieve tokens
-  - [ ] from osx keychain
+- [ ] retrieve tokens
+  - [x] from osx keychain
   - [ ] from 1Password
     - [ ] in os x
     - [ ] in windows
     - [ ] in *nix
-- [ ] store and retrieve private keys
-  - [ ] from osx keychain
+- [ ] retrieve cert key/pair
+  - [x] from osx keychain
   - [ ] from 1Password
     - [ ] in os x
     - [ ] in windows
@@ -80,10 +107,12 @@ I :heart: contributions, it'd be great if you could add support for your favouri
 - [ ] CI/CD/CD
   - [ ] lint
   - [ ] test
-  - [ ] build
+  - [ ] build binaries
     - [ ] osx
     - [ ] *nix
     - [ ] windows
-    - [ ] docker?
+    - [ ] x86?
     - [ ] arm?
-  - [ ] publish to github releases
+    - [ ] docker?
+  - [ ] publish binaries to github releases
+  - [ ] cli interface for abstracting creating new credentials in your password manager e.g. `kubectl passman keychain create [item name] --token=[my token]`

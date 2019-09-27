@@ -1,5 +1,7 @@
 # kubectl user password manager glue
 
+ > :heavy_exclamation_mark: An easy way to store your kubernetes credentials in [1password](https://1password.com/) or [Mac OS Keychain](https://support.apple.com/en-gb/guide/keychain-access/kyca1083/mac) (more password managers coming soon)
+
 ### Does your `~/.kube/config` look like this:
 
 ```yaml

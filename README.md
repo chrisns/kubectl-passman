@@ -118,18 +118,11 @@ I :heart: contributions, it'd be great if you could add support for your favouri
 
 - [x] rename project ~~k8s-user-passmanager~~ kubectl-passman to math a compatible named binary
 - [x] skeleton readme doc
-- [ ] retrieve tokens
-  - [x] from osx keychain
-  - [x] from 1Password
-    - [x] in os x
-    - [x] in windows
-    - [x] in *nix
-- [ ] retrieve cert key/pair
-  - [x] from osx keychain
-  - [x] from 1Password
-    - [x] in os x
-    - [x] in windows
-    - [x] in *nix
+- [ ] retrieve from:
+  - [x] osx keychain
+  - [x] 1Password
+  - [ ] keepass/varients
+  - [ ] lastpass
 - [ ] validate that kubectl is official signed build before executing
 - [ ] CI/CD/CD
   - [ ] lint

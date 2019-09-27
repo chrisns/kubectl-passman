@@ -19,7 +19,7 @@ users:
 
 > a suggestion of a better name is very welcome, it's not too late to change!
 
-What this `kubectl` plugin does is glue your kubectl config to a common password manager.
+What this `kubectl` [plugin](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins) does is glue your kubectl config to a common password manager.
 
 ## Installation
 
@@ -135,4 +135,5 @@ I :heart: contributions, it'd be great if you could add support for your favouri
     - [ ] arm?
     - [ ] docker?
   - [ ] publish binaries to github releases
+  - [ ] install via [krew](https://github.com/kubernetes-sigs/krew/blob/master/docs/DEVELOPER_GUIDE.md)
   - [ ] cli interface for abstracting creating new credentials in your password manager e.g. `kubectl passman keychain create [item name] --token=[my token]`

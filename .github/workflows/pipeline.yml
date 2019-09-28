@@ -49,12 +49,12 @@ jobs:
       max-parallel: 3
       matrix:
         GOOS: [windows, linux, darwin]
-        GOARCH: [amd64]
+        GOARCH: [amd64, arm64]
     steps:
       - uses: actions/checkout@v1
       - uses: docker://golang:1.13
         with:
-          args: go build -a -ldflags '-extldflags "-static"' -o kubectl-${{ matrix.GOOS }}-${{ matrix.GOARCH }}
+          args: go build -a -o kubectl-${{ matrix.GOOS }}-${{ matrix.GOARCH }}
         env:
           GOOS: ${{ matrix.GOOS }}
           GOARCH: ${{ matrix.GOARCH }}

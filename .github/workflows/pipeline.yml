@@ -6,16 +6,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app mygo sh -c "go get -u golang.org/x/lint/golint; golint"
+      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13-alpine sh -c "go get -u golang.org/x/lint/golint; golint"
 
   go-vet:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app mygo sh -c "go vet"
+      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13-alpine sh -c "go vet"
 
   go-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app mygo sh -c "go test -v"
+      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13-alpine sh -c "go test -v"

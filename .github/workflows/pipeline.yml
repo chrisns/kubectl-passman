@@ -2,6 +2,12 @@ name: CI Pipeline
 on: [push]
 
 jobs:
+  seekrat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: docker://cdssnc/seekret-github-action
+
   go-lint:
     runs-on: ubuntu-latest
     steps:

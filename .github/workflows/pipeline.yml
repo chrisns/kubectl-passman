@@ -28,12 +28,9 @@ jobs:
       - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 go vet
 
   govet: 
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - run:  go vet
-        container:
-          image: golang:1.13
+    container:
+      image: golang:1.13
+
 
   go-test:
     runs-on: ubuntu-latest

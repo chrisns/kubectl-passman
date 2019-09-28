@@ -9,11 +9,13 @@ jobs:
       - run:  docker run --rm -v `pwd`:/app -w /app mygo sh -c "go get -u golang.org/x/lint/golint; golint"
 
   go-vet:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - run:  docker run --rm -v `pwd`:/app -w /app mygo sh -c "go vet"
 
   go-test:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - run:  docker run --rm -v `pwd`:/app -w /app mygo sh -c "go test -v"

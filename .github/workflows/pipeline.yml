@@ -7,6 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run:  docker run --rm -v `pwd`:/app -w /app cytopia/golint .
+     
 
   go-fmt: 
     runs-on: ubuntu-latest
@@ -26,6 +27,13 @@ jobs:
       - uses: actions/checkout@v1
       - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 go vet
 
+  govet: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - image: golang:1.13
+        run:  go vet
+
   go-test:
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +43,7 @@ jobs:
   go-build:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: false  
       max-parallel: 3
       matrix:
         GOOS: [windows, linux, darwin]

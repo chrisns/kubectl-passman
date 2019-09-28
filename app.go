@@ -57,7 +57,7 @@ func keychainFetcher(serviceLabel string) string {
 }
 
 type opResponse struct {
-	Uuid    string            `json:"uuid"`
+	UUID    string            `json:"uuid"`
 	Details opResponseDetails `json:"details"`
 }
 type opResponseDetails struct {

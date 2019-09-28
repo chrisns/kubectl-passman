@@ -2,11 +2,32 @@ name: CI Pipeline
 on: [push]
 
 jobs:
-  build:
+  go-lint: 
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v1
-      - name: test
-        uses: golang:1.13
-        run: go test -v
+      - run:  docker run --rm -v `pwd`:/app -w /app cytopia/golint .
+
+  go-fmt: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run:  docker run --rm -v `pwd`:/app -w /app cytopia/gofmt --ci .
+
+  go-imports: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run:  docker run --rm -v `pwd`:/app -w /app cytopia/goimports --ci .
+
+  go-vet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 sh -c "go vet"
+
+  go-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 sh -c "go test -v"

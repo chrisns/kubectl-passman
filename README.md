@@ -127,8 +127,8 @@ I :heart: contributions, it'd be great if you could add support for your favouri
   - [ ] lastpass
 - [ ] validate that kubectl is official signed build before executing
 - [ ] CI/CD/CD
-  - [ ] lint
-  - [ ] test
+  - [x] lint
+  - [x] test
   - [ ] build binaries
     - [ ] osx
     - [ ] *nix

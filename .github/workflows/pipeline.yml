@@ -46,10 +46,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 30
       matrix:
-        GOOS: [windows, linux, darwin]
-        GOARCH: [amd64, arm64]
+        GOOS: [windows, linux, darwin, solaris, freebsd, netbsd, openbsd]
+        GOARCH: [amd64, arm64, "386", "arm", "ppc64"]
     steps:
       - uses: actions/checkout@v1
       - uses: docker://golang:1.13

@@ -2,11 +2,12 @@ name: CI Pipeline
 on: [push]
 
 jobs:
-  seekrat:
+  secret-check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: docker://cdssnc/seekret-github-action
+      - uses: "eshork/gitleaks-action@master"
 
   go-lint:
     runs-on: ubuntu-latest
@@ -55,20 +56,25 @@ jobs:
       max-parallel: 30
       matrix:
         GOOS:
-          [
-            windows,
-            linux,
-            darwin,
-            solaris,
-            freebsd,
-            netbsd,
-            openbsd,
-            dragonfly,
-            plan9,
-            nacl,
-            android,
-          ]
-        GOARCH: [amd64, arm64, "386", arm, ppc64, ppc64le, amd64p32]
+          - windows
+          - linux
+          - darwin
+          # - solaris
+          # - freebsd
+          # - netbsd
+          # - openbsd
+          # - dragonfly
+          # - plan9
+          # - nacl
+          # - android
+        GOARCH:
+          - amd64
+          # - arm64
+          # - "386"
+          # - arm
+          # - ppc64
+          # - ppc64le
+          # - amd64p32
     steps:
       - uses: actions/checkout@v1
       - uses: docker://golang:1.13

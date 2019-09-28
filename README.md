@@ -1,5 +1,18 @@
 # kubectl user password manager glue
 
+![CI status badge](https://github.com/chrisns/kubectl-passman/workflows/CI%20Pipeline/badge.svg) 
+![LICENSE](https://img.shields.io/github/license/chrisns/kubectl-passman) 
+![GitHub watchers](https://img.shields.io/github/watchers/chrisns/kubectl-passman?style) 
+![GitHub stars](https://img.shields.io/github/stars/chrisns/kubectl-passman) 
+![GitHub forks](https://img.shields.io/github/forks/chrisns/kubectl-passman) 
+![GitHub issues](https://img.shields.io/github/issues-raw/chrisns/kubectl-passman) 
+![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/chrisns/kubectl-passman) 
+![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/chrisns/kubectl-passman) 
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/chrisns/kubectl-passman) 
+![GitHub repo size](https://img.shields.io/github/repo-size/chrisns/kubectl-passman) 
+![GitHub contributors](https://img.shields.io/github/contributors/chrisns/kubectl-passman)
+![GitHub last commit](https://img.shields.io/github/last-commit/chrisns/kubectl-passman)
+
  > :heavy_exclamation_mark: An easy way to store your kubernetes credentials in [1password](https://1password.com/) or [Mac OS Keychain](https://support.apple.com/en-gb/guide/keychain-access/kyca1083/mac) (more password managers coming soon)
 
 ### Does your `~/.kube/config` look like this:

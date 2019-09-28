@@ -30,7 +30,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: docker://golang:1.13
-        run: go vet
+        with:
+          args: go vet
 
   go-test:
     runs-on: ubuntu-latest

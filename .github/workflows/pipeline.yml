@@ -2,52 +2,50 @@ name: CI Pipeline
 on: [push]
 
 jobs:
-  go-lint: 
+  go-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app cytopia/golint .
-     
+      - run: docker run --rm -v `pwd`:/app -w /app cytopia/golint .
 
-  go-fmt: 
+  go-fmt:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app cytopia/gofmt --ci .
+      - run: docker run --rm -v `pwd`:/app -w /app cytopia/gofmt --ci .
 
-  go-imports: 
+  go-imports:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app cytopia/goimports --ci .
+      - run: docker run --rm -v `pwd`:/app -w /app cytopia/goimports --ci .
 
   go-vet:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 go vet
+      - run: docker run --rm -v `pwd`:/app -w /app golang:1.13 go vet
 
-  govet: 
-    container:
-      image: golang:1.13
+  govet:
+    runs-on: ubuntu-latest
     steps:
-      - run: go vet 
-
+      - uses: docker://golang:1.13
+        run: go vet
 
   go-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 go test -v
+      - run: docker run --rm -v `pwd`:/app -w /app golang:1.13 go test -v
 
   go-build:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false  
+      fail-fast: false
       max-parallel: 3
       matrix:
         GOOS: [windows, linux, darwin]
         GOARCH: [amd64]
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app -e GOOS=${{ matrix.GOOS }} -e GOARCH=${{ matrix.GOARCH }} golang:1.13 go build -a -ldflags '-extldflags "-static"' -o connectivity-tester-windows-amd64.exe
+      - run: docker run --rm -v `pwd`:/app -w /app -e GOOS=${{ matrix.GOOS }} -e GOARCH=${{ matrix.GOARCH }} golang:1.13 go build -a -ldflags '-extldflags "-static"' -o connectivity-tester-windows-amd64.exe

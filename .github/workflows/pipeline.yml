@@ -30,6 +30,8 @@ jobs:
   govet: 
     container:
       image: golang:1.13
+    steps:
+      - run: go vet 
 
 
   go-test:

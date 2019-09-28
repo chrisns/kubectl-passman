@@ -6,27 +6,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run: docker run --rm -v `pwd`:/app -w /app cytopia/golint .
+      - uses: docker://cytopia/golint
+        with:
+          args: .
 
   go-fmt:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run: docker run --rm -v `pwd`:/app -w /app cytopia/gofmt --ci .
+      - uses: docker://cytopia/gofmt
+        with:
+          args: --ci .
 
   go-imports:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run: docker run --rm -v `pwd`:/app -w /app cytopia/goimports --ci .
+      - uses: docker://cytopia/goimports
+        with:
+          args: --ci .
 
   go-vet:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - run: docker run --rm -v `pwd`:/app -w /app golang:1.13 go vet
-
-  govet:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -38,7 +38,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run: docker run --rm -v `pwd`:/app -w /app golang:1.13 go test -v
+      - uses: docker://golang:1.13
+        with:
+          args: docker run --rm -v `pwd`:/app -w /app golang:1.13 go test -v
 
   go-build:
     runs-on: ubuntu-latest
@@ -50,4 +52,9 @@ jobs:
         GOARCH: [amd64]
     steps:
       - uses: actions/checkout@v1
-      - run: docker run --rm -v `pwd`:/app -w /app -e GOOS=${{ matrix.GOOS }} -e GOARCH=${{ matrix.GOARCH }} golang:1.13 go build -a -ldflags '-extldflags "-static"' -o connectivity-tester-windows-amd64.exe
+      - uses: docker://golang:1.13
+        with:
+          args: go build -a -ldflags '-extldflags "-static"' -o kubectl-${{ matrix.GOOS }}-${{ matrix.GOARCH }}
+        env:
+          GOOS: ${{ matrix.GOOS }}
+          GOARCH: ${{ matrix.GOARCH }}

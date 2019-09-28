@@ -48,7 +48,20 @@ jobs:
       fail-fast: false
       max-parallel: 30
       matrix:
-        GOOS: [windows, linux, darwin, solaris, freebsd, netbsd, openbsd]
+        GOOS:
+          [
+            windows,
+            linux,
+            darwin,
+            solaris,
+            freebsd,
+            netbsd,
+            openbsd,
+            dragonfly,
+            plan9,
+            nacl,
+            android,
+          ]
         GOARCH: [amd64, arm64, "386", arm, ppc64, ppc64le, amd64p32]
     steps:
       - uses: actions/checkout@v1

@@ -2,18 +2,18 @@ name: CI Pipeline
 on: [push]
 
 jobs:
-  build:
+  go-lint: 
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v1
-      - name: docker pull golang
-        run: |
-          docker pull golang:1.13-alpine
-          docker tag golang:1.13-alpine mygo 
-      - name: lint
-        run:  docker run --rm -v `pwd`:/app -w /app mygo sh -c "go get -u golang.org/x/lint/golint; golint"
-      - name: vet
-        run:  docker run --rm -v `pwd`:/app -w /app mygo go vet
-      - name: test
-        run: docker run --rm -v `pwd`:/app -w /app mygo go test -v
+      - run:  docker run --rm -v `pwd`:/app -w /app mygo sh -c "go get -u golang.org/x/lint/golint; golint"
+
+  go-vet:
+    steps:
+      - uses: actions/checkout@v1
+      - run:  docker run --rm -v `pwd`:/app -w /app mygo sh -c "go vet"
+
+  go-test:
+    steps:
+      - uses: actions/checkout@v1
+      - run:  docker run --rm -v `pwd`:/app -w /app mygo sh -c "go test -v"

@@ -10,7 +10,7 @@ jobs:
       - name: docker pull golang
         run: docker pull golang:1.13 
       - name: lint
-        run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 go get -u golang.org/x/lint/golint; golint"
+        run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 sh -c "go get -u golang.org/x/lint/golint; golint"
       - name: vet
         run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 go vet
       - name: test

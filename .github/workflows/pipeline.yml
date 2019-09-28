@@ -35,9 +35,11 @@ jobs:
   go-build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
+      max-parallel: 3
       matrix:
         GOOS: [windows, linux, darwin]
         GOARCH: [amd64]
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app -e GOOS=windows -e GOARCH=amd64 golang:1.13 go build -a -ldflags '-extldflags "-static"' -o connectivity-tester-windows-amd64.exe
+      - run:  docker run --rm -v `pwd`:/app -w /app -e GOOS=${{ matrix.GOOS }} -e GOARCH=${{ matrix.GOARCH }} golang:1.13 go build -a -ldflags '-extldflags "-static"' -o connectivity-tester-windows-amd64.exe

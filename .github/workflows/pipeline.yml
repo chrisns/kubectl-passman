@@ -24,10 +24,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 sh -c "go vet"
+      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 go vet
 
   go-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 sh -c "go test -v"
+      - run:  docker run --rm -v `pwd`:/app -w /app golang:1.13 go test -v
+
+  go-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - run:  docker run --rm -v `pwd`:/app -w /app -e GOOS=windows -e GOARCH=amd64 golang:1.13 go build -a -ldflags '-extldflags "-static"' -o connectivity-tester-windows-amd64.exe

@@ -143,9 +143,9 @@ I :heart: contributions, it'd be great if you could add support for your favouri
   - [x] lint
   - [x] test
   - [ ] build binaries
-    - [ ] osx
-    - [ ] *nix
-    - [ ] windows
+    - [x] osx
+    - [x] *nix
+    - [x] windows
     - [ ] x86?
     - [ ] arm?
     - [ ] docker?

@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"github.com/keybase/go-keychain"
 	"testing"
 
+	"github.com/keybase/go-keychain"
 	"github.com/stretchr/testify/require"
 )
 

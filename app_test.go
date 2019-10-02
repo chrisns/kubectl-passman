@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
+	"github.com/keybase/go-keychain"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -24,15 +26,20 @@ func Test_formatResponse_override_defaults(t *testing.T) {
 }
 
 func Test_keychainFetcher_NoKeychainError(t *testing.T) {
-	// panicker := func() {
-	// 	// TODO: MOCK keychain.QueryItem(query) returns err=1
-	// 	keychainFetcher("error")
-	// }
-	// require.PanicsWithValue(t, "unable to connect to keychain", panicker)
+	panicker := func() {
+		defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
+			return nil, errors.New("error")
+		}
+		keychainFetcher("error")
+	}
+	require.PanicsWithValue(t, "unable to connect to keychain", panicker)
 }
 func Test_keychainFetcher_NoItemFoundError(t *testing.T) {
 	panicker := func() {
 		// TODO: MOCK keychain.QueryItem(query) returns empty array
+		defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
+			return nil, nil
+		}
 		keychainFetcher("doesn't exist")
 	}
 	require.PanicsWithValue(t, "item doesn't exist", panicker)
@@ -40,8 +47,10 @@ func Test_keychainFetcher_NoItemFoundError(t *testing.T) {
 
 func Test_keychainFetcher_ItemFound(t *testing.T) {
 	var expected = "RSA"
-	// TODO: MOCK keychain.QueryItem(query) returns "RSARSA"
-	require.Contains(t, keychainFetcher("gabriel"), expected)
+	defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
+		return []keychain.QueryResult{{Data: []byte(expected)}}, nil
+	}
+	require.Contains(t, expected, keychainFetcher("gabriel"))
 }
 
 func Test_opgetter_happy(t *testing.T) {

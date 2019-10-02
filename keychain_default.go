@@ -1,4 +1,4 @@
-// +build !darwin
+// +build !darwin AND !amd64
 
 package main
 

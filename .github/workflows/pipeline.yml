@@ -3,101 +3,85 @@ on: [push, pull_request]
 
 jobs:
   secret-check:
+    name: Secret check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: docker://cdssnc/seekret-github-action
-      - uses: "eshork/gitleaks-action@master"
-
-  go-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: docker://cytopia/golint
+      - uses: docker://zricethezav/gitleaks
         with:
-          args: .
+          args: -v --exclude-forks --repo-path=. --repo-config
 
-  go-fmt:
+  golangci-lint:
+    name: GolangCI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: docker://cytopia/gofmt
+      - uses: docker://golangci/golangci-lint
         with:
-          args: --ci .
+          args: golangci-lint run --color=always
 
-  go-imports:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: docker://cytopia/goimports
-        with:
-          args: --ci .
-
-  go-vet:
-    runs-on: macOS-latest
-    steps:
-      - uses: actions/checkout@v1
-      - run: go vet
-
-  go-test:
+  test-build-publish:
+    name: Test and Build
     runs-on: macOS-latest
     strategy:
       fail-fast: false
       max-parallel: 30
       matrix:
-        GOOS:
-          - windows
-          - linux
+        OS:
           - darwin
-          - solaris
-          - freebsd
+          - linux
+          - windows
           - netbsd
+          - freebsd
           - openbsd
-          - dragonfly
           - plan9
-        GOARCH:
+          - solaris
+        ARCH:
           - amd64
-          # - arm64
-          - "386"
-          # - arm
-          # - ppc64
-          # - ppc64le
-          # - amd64p32
+          - 386
+          - arm64
+          - arm
+        include:
+          - OS: windows
+            EXT: .exe
+        exclude:
+          - OS: darwin
+            ARCH: arm64
+          - OS: darwin
+            ARCH: arm
+          - OS: windows
+            ARCH: arm64
+          - OS: freebsd
+            ARCH: arm64
+          - OS: plan9
+            ARCH: arm64
+          - OS: solaris
+            ARCH: arm64
+          - OS: solaris
+            ARCH: arm
+          - OS: solaris
+            ARCH: 386
     steps:
       - uses: actions/checkout@v1
       - run: go test -v
+      - run: go build -a -o build/kubectl-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
         env:
-          GOOS: ${{ matrix.GOOS }}
-          GOARCH: ${{ matrix.GOARCH }}
-
-  go-build:
-    runs-on: macOS-latest
-    strategy:
-      fail-fast: false
-      max-parallel: 30
-      matrix:
-        GOOS:
-          - windows
-          - linux
-          - darwin
-          - solaris
-          - freebsd
-          - netbsd
-          - openbsd
-          - dragonfly
-          - plan9
-        GOARCH:
-          - amd64
-          # - arm64
-          - "386"
-          # - arm
-          # - ppc64
-          # - ppc64le
-          # - amd64p32
-    steps:
-      - uses: actions/checkout@v1
-      - run: |
-          go build -a -o kubectl-${{ matrix.GOOS }}-${{ matrix.GOARCH }}
+          GOOS: ${{matrix.OS}}
+          GOARCH: ${{matrix.ARCH}}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: kubectl-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+          path: build/kubectl-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+      - name: fetch hub
+        if: github.event_name == 'push'
+        run: wget -q -c https://github.com/github/hub/releases/download/v2.12.7/hub-darwin-amd64-2.12.7.tgz -O - | tar -xz
+      - name: create pre-release if it doesn't exist
+        if: github.event_name == 'push'
+        run: hub-darwin-amd64-2.12.7/bin/hub release create -p -m "${{github.ref}} build" "build-${{github.ref}}" || echo release already exists
         env:
-          GOOS: ${{ matrix.GOOS }}
-          GOARCH: ${{ matrix.GOARCH }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish to release
+        if: github.event_name == 'push'
+        run: hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}} -m "${{github.ref}} build" "build-${{github.ref}}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

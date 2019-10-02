@@ -1,0 +1,139 @@
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  funlen:
+    lines: 60
+    statements: 40
+
+  govet:
+    check-shadowing: true
+
+    enable-all: false
+  gocyclo:
+    min-complexity: 10
+  maligned:
+    suggest-new: true
+  depguard:
+  misspell:
+    locale: US
+  lll:
+    line-length: 120
+  unused:
+    check-exported: true
+  unparam:
+    check-exported: true
+  nakedret:
+    max-func-lines: 30
+  gocritic:
+    # See https://go-critic.github.io/overview#checks-overview
+    # To check which checks are enabled run `GL_DEBUG=gocritic golangci-lint run`
+    # enabled-checks:
+    #   - rangeValCopy
+    #   - argOrder
+    #   - badCall
+    #   - badCond
+    #   - boolExprSimplify
+    #   - builtinShadow
+    #   - codegenComment
+    #   - commentFormatting
+    #   - commentedOutCode
+    #   - commentedOutImport
+    #   - deprecatedComment
+    #   - docStub
+    #   - dupImport
+    #   - emptyFallthrough
+    #   - emptyStringTest
+    #   - evalOrder
+    #   - exitAfterDefer
+    #   - flagName
+    #   - hexLiteral
+    #   - importShadow
+    #   - initClause
+    #   - methodExprCall
+    #   - nestingReduce
+    #   - newDeref
+    #   - nilValReturn
+    #   - octalLiteral
+    #   - offBy1
+    #   - paramTypeCombine
+    #   - ptrToRefParam
+    #   - regexpPattern
+    #   - sloppyReassign
+    #   - stringXbytes
+    #   - typeAssertChain
+    #   - typeUnparen
+    #   - unlabelStmt
+    #   - unnamedResult
+    #   - unnecessaryBlock
+    #   - valSwap
+    #   - weakCond
+    #   - wrapperFunc
+    #   - yodaStyleExpr
+
+    # Enable multiple checks by tags, run `GL_DEBUG=gocritic golangci-lint` run to see all tags and checks.
+    # Empty list by default. See https://github.com/go-critic/go-critic#usage -> section "Tags".
+    enabled-tags:
+      - performance
+      - opinionated
+      - diagnostic
+      - style
+
+  whitespace:
+    multi-if: false
+
+linters:
+  # enable:
+  #   - bodyclose
+  #   - deadcode
+  #   - depguard
+  #   - dogsled
+  #   - dupl
+  #   - errcheck
+  #   - funlen
+  #   - gochecknoinits
+  #   - goconst
+  #   - gocritic
+  #   - gocyclo
+  #   - gofmt
+  #   - goimports
+  #   - golint
+  #   - gosec
+  #   - gosimple
+  #   - govet
+  #   - ineffassign
+  #   - interfacer
+  #   - lll
+  #   - misspell
+  #   - nakedret
+  #   - scopelint
+  #   - staticcheck
+  #   - structcheck
+  #   - stylecheck
+  #   - typecheck
+  #   - unconvert
+  #   - unparam
+  #   - unused
+  #   - varcheck
+  #   - whitespace
+
+  enable-all: true
+  # disable:
+  #   - maligned
+  #   - prealloc
+  # disable-all: false
+  # presets:
+  #   - bugs
+  #   - unused
+  fast: false
+  auto-fix: false
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  # new: true
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - unused

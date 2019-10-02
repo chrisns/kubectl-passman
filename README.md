@@ -56,8 +56,8 @@ or for a key pair:
 
 ```json
 {
-  "clientCertificateData":"-----BEGIN CERTIFICATE-----\nMIIC9DCCA.......-----END CERTIFICATE-----",
-  "clientKeyData":"-----BEGIN RSA PRIVATE KEY-----\nMIIE......-----END RSA PRIVATE KEY-----"
+  "clientCertificateData":"-----BEGIN REAL CERTIFICATE-----\nMIIC9DCCA.......-----END CERTIFICATE-----",
+  "clientKeyData":"-----BEGIN REAL RSA PRIVATE KEY-----\nMIIE......-----END REAL RSA PRIVATE KEY-----"
 }
 ```
 
@@ -142,13 +142,13 @@ I :heart: contributions, it'd be great if you could add support for your favouri
 - [ ] CI/CD/CD
   - [x] lint
   - [x] test
-  - [ ] build binaries
+  - [x] build binaries
     - [x] osx
     - [x] *nix
     - [x] windows
-    - [ ] x86?
-    - [ ] arm?
+    - [x] x86?
+    - [x] arm?
     - [ ] docker?
-  - [ ] publish binaries to github releases
+  - [x] publish binaries to github releases
   - [ ] install via [krew](https://github.com/kubernetes-sigs/krew/blob/master/docs/DEVELOPER_GUIDE.md)
   - [ ] cli interface for abstracting creating new credentials in your password manager e.g. `kubectl passman keychain create [item name] --token=[my token]`

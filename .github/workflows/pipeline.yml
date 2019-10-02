@@ -34,30 +34,26 @@ jobs:
           args: --ci .
 
   go-vet:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: docker://golang:1.13
-        with:
-          args: go vet
+      - run: go vet
 
   go-test:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v1
-      - uses: docker://golang:1.13
-        with:
-          args: go test -v
+      - run: go test -v
 
   go-build:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
     strategy:
       fail-fast: false
       max-parallel: 30
       matrix:
         GOOS:
-          - windows
-          - linux
+          # - windows
+          # - linux
           - darwin
           # - solaris
           # - freebsd
@@ -77,9 +73,33 @@ jobs:
           # - amd64p32
     steps:
       - uses: actions/checkout@v1
-      - uses: docker://golang:1.13
-        with:
-          args: go build -a -o kubectl-${{ matrix.GOOS }}-${{ matrix.GOARCH }}
+      - run: |
+          go build -a -o kubectl-${{ matrix.GOOS }}-${{ matrix.GOARCH }}
         env:
           GOOS: ${{ matrix.GOOS }}
           GOARCH: ${{ matrix.GOARCH }}
+  # go-build:
+  #   strategy:
+  #     matrix:
+  #       targets:
+  #         - windows/386
+  #         - windows/amd64
+  #         - linux/386
+  #         - linux/amd64
+  #         - darwin/386
+  #         - darwin/amd64
+  #       go_version:
+  #         - 1.13.x
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - run: |
+  #       go get github.com/karalabe/xgo
+  #     - uses: crazy-max/ghaction-xgo@master
+  #       with:
+  #         go_version: ${{ matrix.go_version }}
+  #         prefix: myapp
+  #         targets: ${{ matrix.target }}
+  #         v: true
+  #         x: false
+  #         ldflags: -s -w

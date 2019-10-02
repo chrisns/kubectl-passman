@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: docker://golang:1.13
         with:
-          args: docker run --rm -v `pwd`:/app -w /app golang:1.13 go test -v
+          args: go test -v
 
   go-build:
     runs-on: ubuntu-latest

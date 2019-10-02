@@ -39,13 +39,17 @@ func opgetter(itemName string) string {
 
 }
 
-func keychainFetcher(serviceLabel string) string {
+var defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
 	query := keychain.NewItem()
 	query.SetSecClass(keychain.SecClassGenericPassword)
 	query.SetService(serviceLabel)
 	query.SetMatchLimit(keychain.MatchLimitOne)
 	query.SetReturnData(true)
-	results, err := keychain.QueryItem(query)
+	return keychain.QueryItem(query)
+}
+
+func keychainFetcher(serviceLabel string) string {
+	results, err := defaultKeychain(serviceLabel)
 	if err != nil {
 		fmt.Println("err", err)
 		panic("unable to connect to keychain")

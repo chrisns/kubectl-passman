@@ -1,0 +1,4 @@
+[whitelist]
+files = [
+  "(.*?)README.md$"
+]

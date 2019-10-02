@@ -4,65 +4,56 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/stretchr/testify/suite"
+	"github.com/stretchr/testify/require"
 )
 
-type MyTestSuite struct {
-	suite.Suite
+func Test_formatResponse(t *testing.T) {
+	fixture := `{"apiVersion":"client.authentication.k8s.io/v1beta1","kind":"ExecCredential","status":{"token":"my-bearer-token"}}`
+	require.Equal(t, fixture, formatResponse(&response{}))
 }
 
-var fixture = `{"apiVersion":"client.authentication.k8s.io/v1beta1","kind":"ExecCredential","status":{"token":"my-bearer-token"}}`
-
-func (suite *MyTestSuite) Test_formatResponse() {
-	suite.Equal(fixture, formatResponse(&response{}))
+func Test_formatResponse_is_json(t *testing.T) {
+	require.True(t, json.Valid([]byte(formatResponse(&response{}))))
 }
 
-func (suite *MyTestSuite) Test_formatResponse_is_json() {
-	suite.True(json.Valid([]byte(formatResponse(&response{}))))
+func Test_formatResponse_populate_defaults(t *testing.T) {
+	require.Contains(t, formatResponse(&response{}), "apiVersion")
+}
+func Test_formatResponse_override_defaults(t *testing.T) {
+	require.Contains(t, formatResponse(&response{Kind: "foo"}), `"kind":"foo"`)
 }
 
-func (suite *MyTestSuite) Test_formatResponse_populate_defaults() {
-	suite.Contains(formatResponse(&response{}), "apiVersion")
-}
-func (suite *MyTestSuite) Test_formatResponse_override_defaults() {
-	suite.Contains(formatResponse(&response{Kind: "foo"}), `"kind":"foo"`)
-}
-
-func (suite *MyTestSuite) Test_keychainFetcher_NoKeychainError() {
+func Test_keychainFetcher_NoKeychainError(t *testing.T) {
 	// panicker := func() {
 	// 	// TODO: MOCK keychain.QueryItem(query) returns err=1
 	// 	keychainFetcher("error")
 	// }
-	// suite.PanicsWithValue("unable to connect to keychain", panicker)
+	// require.PanicsWithValue(t, "unable to connect to keychain", panicker)
 }
-func (suite *MyTestSuite) Test_keychainFetcher_NoItemFoundError() {
+func Test_keychainFetcher_NoItemFoundError(t *testing.T) {
 	panicker := func() {
 		// TODO: MOCK keychain.QueryItem(query) returns empty array
 		keychainFetcher("doesn't exist")
 	}
-	suite.PanicsWithValue("item doesn't exist", panicker)
+	require.PanicsWithValue(t, "item doesn't exist", panicker)
 }
 
-func (suite *MyTestSuite) Test_keychainFetcher_ItemFound() {
+func Test_keychainFetcher_ItemFound(t *testing.T) {
 	var expected = "RSA"
 	// TODO: MOCK keychain.QueryItem(query) returns "RSARSA"
-	suite.Contains(keychainFetcher("gabriel"), expected)
+	require.Contains(t, keychainFetcher("gabriel"), expected)
 }
 
-func (suite *MyTestSuite) Test_opgetter_happy() {
+func Test_opgetter_happy(t *testing.T) {
 	var expected = "RSA"
 	// TODO: MOCK exec.Command() returns {"details": {"fields":[{"name": "password", "value": "RSARSA"}]}}
-	suite.Contains(opgetter("gabriel"), expected)
+	require.Contains(t, opgetter("gabriel"), expected)
 }
 
-func (suite *MyTestSuite) Test_opgetter_op_fail() {
+func Test_opgetter_op_fail(t *testing.T) {
 	// TODO: MOCK exec.Command() returns (ERROR)  item mykubecreds not found
 }
 
-func (suite *MyTestSuite) Test_opgetter_password_not_found() {
+func Test_opgetter_password_not_found(t *testing.T) {
 	// TODO: MOCK exec.Command() returns {"details": {"fields":[{"name": "notpassword", "value": "RSARSA"}]}}
-}
-
-func TestMyTestSuite(t *testing.T) {
-	suite.Run(t, new(MyTestSuite))
 }

@@ -53,7 +53,7 @@ jobs:
       matrix:
         GOOS:
           # - windows
-          # - linux
+          - linux
           - darwin
           # - solaris
           # - freebsd

@@ -34,7 +34,7 @@ jobs:
           args: --ci .
 
   go-vet:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v1
       - uses: docker://golang:1.13
@@ -42,7 +42,7 @@ jobs:
           args: go vet
 
   go-test:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v1
       - uses: docker://golang:1.13
@@ -50,7 +50,7 @@ jobs:
           args: docker run --rm -v `pwd`:/app -w /app golang:1.13 go test -v
 
   go-build:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
     strategy:
       fail-fast: false
       max-parallel: 30

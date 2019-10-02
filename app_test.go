@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -25,14 +26,38 @@ func Test_formatResponse_override_defaults(t *testing.T) {
 
 func Test_opgetter_happy(t *testing.T) {
 	var expected = "RSA"
-	// TODO: MOCK exec.Command() returns {"details": {"fields":[{"name": "password", "value": "RSARSA"}]}}
+	defaultOp = func(itemName string) (*opResponse, error) {
+		return &opResponse{
+			Details: opResponseDetails{
+				Fields: []opResponseField{{
+					Name:  "password",
+					Value: expected,
+				}},
+			},
+		}, nil
+	}
 	require.Contains(t, opgetter("gabriel"), expected)
 }
 
 func Test_opgetter_op_fail(t *testing.T) {
-	// TODO: MOCK exec.Command() returns (ERROR)  item mykubecreds not found
+	err := errors.New("test")
+	defaultOp = func(itemName string) (*opResponse, error) {
+		return nil, err
+	}
+	require.PanicsWithValue(t, err, func() { opgetter("mykubecreds") })
 }
 
 func Test_opgetter_password_not_found(t *testing.T) {
-	// TODO: MOCK exec.Command() returns {"details": {"fields":[{"name": "notpassword", "value": "RSARSA"}]}}
+	var expected = "RSA"
+	defaultOp = func(itemName string) (*opResponse, error) {
+		return &opResponse{
+			Details: opResponseDetails{
+				Fields: []opResponseField{{
+					Name:  "notpassword",
+					Value: expected,
+				}},
+			},
+		}, nil
+	}
+	require.Panics(t, func() { opgetter("test") }) // TODO: panics with index out of range; is this expected behaviour?
 }

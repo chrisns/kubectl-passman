@@ -24,17 +24,26 @@ func main() {
 	fmt.Println(string(formatResponse(res)))
 }
 
-func opgetter(itemName string) string {
+var defaultOp = func(itemName string) (*opResponse, error) {
 	out, err := exec.Command("op", "get", "item", itemName).Output()
+	if err != nil {
+		return nil, err
+	}
+	var resp opResponse
+	err = json.Unmarshal(out, &resp)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func opgetter(itemName string) string {
+	resp, err := defaultOp(itemName)
 	if err != nil {
 		panic(err)
 	}
-	dat := opResponse{}
-	if err := json.Unmarshal(out, &dat); err != nil {
-		panic(err)
-	}
-	i := sort.Search(len(dat.Details.Fields), func(i int) bool { return dat.Details.Fields[i].Name == "password" })
-	return dat.Details.Fields[i].Value
+	i := sort.Search(len(resp.Details.Fields), func(i int) bool { return resp.Details.Fields[i].Name == "password" })
+	return resp.Details.Fields[i].Value
 
 }
 

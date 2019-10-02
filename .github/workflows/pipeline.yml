@@ -41,9 +41,34 @@ jobs:
 
   go-test:
     runs-on: macOS-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 30
+      matrix:
+        GOOS:
+          - windows
+          - linux
+          - darwin
+          - solaris
+          - freebsd
+          - netbsd
+          - openbsd
+          - dragonfly
+          - plan9
+        GOARCH:
+          - amd64
+          # - arm64
+          - "386"
+          # - arm
+          # - ppc64
+          # - ppc64le
+          # - amd64p32
     steps:
       - uses: actions/checkout@v1
       - run: go test -v
+        env:
+          GOOS: ${{ matrix.GOOS }}
+          GOARCH: ${{ matrix.GOARCH }}
 
   go-build:
     runs-on: macOS-latest
@@ -52,21 +77,19 @@ jobs:
       max-parallel: 30
       matrix:
         GOOS:
-          # - windows
+          - windows
           - linux
           - darwin
-          # - solaris
-          # - freebsd
-          # - netbsd
-          # - openbsd
-          # - dragonfly
-          # - plan9
-          # - nacl
-          # - android
+          - solaris
+          - freebsd
+          - netbsd
+          - openbsd
+          - dragonfly
+          - plan9
         GOARCH:
           - amd64
           # - arm64
-          # - "386"
+          - "386"
           # - arm
           # - ppc64
           # - ppc64le
@@ -78,28 +101,3 @@ jobs:
         env:
           GOOS: ${{ matrix.GOOS }}
           GOARCH: ${{ matrix.GOARCH }}
-  # go-build:
-  #   strategy:
-  #     matrix:
-  #       targets:
-  #         - windows/386
-  #         - windows/amd64
-  #         - linux/386
-  #         - linux/amd64
-  #         - darwin/386
-  #         - darwin/amd64
-  #       go_version:
-  #         - 1.13.x
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - run: |
-  #       go get github.com/karalabe/xgo
-  #     - uses: crazy-max/ghaction-xgo@master
-  #       with:
-  #         go_version: ${{ matrix.go_version }}
-  #         prefix: myapp
-  #         targets: ${{ matrix.target }}
-  #         v: true
-  #         x: false
-  #         ldflags: -s -w

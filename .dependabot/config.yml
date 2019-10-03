@@ -10,5 +10,5 @@ update_configs:
       - chrisns
     automerged_updates:
       - match:
-        dependency_type: "all"
-        update_type: security:patch
+          dependency_type: "all"
+          update_type: security:patch

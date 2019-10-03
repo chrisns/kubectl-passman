@@ -1,5 +1,17 @@
 name: CI Pipeline
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - build-refs**
+  pull_request:
+
+env:
+  HUB_VERSION: 2.12.7
+  HUB_OS: darwin
+  HUB_ARCH: amd64
+  REF: build-${{github.ref}}
 
 jobs:
   secret-check:
@@ -61,14 +73,17 @@ jobs:
             ARCH: arm
           - OS: solaris
             ARCH: 386
+    env:
+      BUILD_FILENAME: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+      ZIP_FILENAME: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip
     steps:
       - uses: actions/checkout@v1
       - run: go test -v
-      - run: go build -a -o kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+      - run: go build -a -o ${BUILD_FILENAME}
         env:
           GOOS: ${{matrix.OS}}
           GOARCH: ${{matrix.ARCH}}
-      - run: chmod +x kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+      - run: chmod +x ${BUILD_FILENAME}
         env:
           GOOS: ${{matrix.OS}}
           GOARCH: ${{matrix.ARCH}}
@@ -78,17 +93,46 @@ jobs:
           path: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
       - name: fetch hub
         if: github.event_name == 'push'
-        run: wget -q -c https://github.com/github/hub/releases/download/v2.12.7/hub-darwin-amd64-2.12.7.tgz -O - | tar -xz
+        run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
       - name: create pre-release if it doesn't exist
         if: github.event_name == 'push'
-        run: hub-darwin-amd64-2.12.7/bin/hub release create -p -m "Latest build of ${{github.ref}}" "build-${{github.ref}}" || echo release already exists
+        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release create -p -m "Latest build of ${{github.ref}}" "${REF}" || echo release already exists
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: zip kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip ${BUILD_FILENAME}
       - name: Publish to release
         if: github.event_name == 'push'
         run: |
-          zip kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
-          hub-darwin-amd64-2.12.7/bin/hub release edit -a kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}} -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
-          hub-darwin-amd64-2.12.7/bin/hub release edit -a kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
+          hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a ${BUILD_FILENAME} -a ${ZIP_FILENAME} -m "Latest build of ${{github.ref}}" "${REF}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  write-krew:
+    name: Write krew manifest file
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    env:
+      HUB_OS: linux
+    needs:
+      - test-build-publish
+    steps:
+      - uses: actions/checkout@v1
+      - run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
+      - run: hub-linux-amd64-2.12.7/bin/hub release download "${REF}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: krew/generate-shas.sh > krew/shas.yaml
+      - name: template krew manifest
+        run: |
+          go get github.com/yngveh/sprig-cli
+          VERSION=$(cat VERSION) $(go env GOPATH)/bin/sprig-cli -tmpl krew/krew.tpl -data krew/shas.yaml > passman.yaml
+      - name: show krew manifest
+        run: cat passman.yaml
+      - uses: actions/upload-artifact@v1
+        with:
+          name: passman.yaml
+          path: passman.yaml
+      - name: Publish krew manifest to release
+        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a passman.yaml -m "Latest build of ${{github.ref}}" "${REF}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

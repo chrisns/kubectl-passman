@@ -64,14 +64,14 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: go test -v
-      - run: go build -a -o build/kubectl-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+      - run: go build -a -o build/kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
         env:
           GOOS: ${{matrix.OS}}
           GOARCH: ${{matrix.ARCH}}
       - uses: actions/upload-artifact@v1
         with:
-          name: kubectl-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
-          path: build/kubectl-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+          name: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+          path: build/kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
       - name: fetch hub
         if: github.event_name == 'push'
         run: wget -q -c https://github.com/github/hub/releases/download/v2.12.7/hub-darwin-amd64-2.12.7.tgz -O - | tar -xz
@@ -82,6 +82,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to release
         if: github.event_name == 'push'
-        run: hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}} -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
-        env:
+        run: |
+          zip build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}.zip build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+          shasum -a 256 build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}.zip > build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}.zip.sha256
+          shasum -a 256 build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}} > build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}.sha256
+          hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}} -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
+          hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}.zip -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
+          hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}.sha256 -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
+          hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}.zip.sha256 -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
+
+          env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

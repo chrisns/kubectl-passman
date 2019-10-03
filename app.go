@@ -44,7 +44,6 @@ func opgetter(itemName string) string {
 	}
 	i := sort.Search(len(resp.Details.Fields), func(i int) bool { return resp.Details.Fields[i].Name == "password" })
 	return resp.Details.Fields[i].Value
-
 }
 
 type opResponse struct {

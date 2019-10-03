@@ -77,11 +77,11 @@ jobs:
         run: wget -q -c https://github.com/github/hub/releases/download/v2.12.7/hub-darwin-amd64-2.12.7.tgz -O - | tar -xz
       - name: create pre-release if it doesn't exist
         if: github.event_name == 'push'
-        run: hub-darwin-amd64-2.12.7/bin/hub release create -p -m "${{github.ref}} build" "build-${{github.ref}}" || echo release already exists
+        run: hub-darwin-amd64-2.12.7/bin/hub release create -p -m "Latest build of ${{github.ref}}" "build-${{github.ref}}" || echo release already exists
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to release
         if: github.event_name == 'push'
-        run: hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}} -m "${{github.ref}} build" "build-${{github.ref}}"
+        run: hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}} -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

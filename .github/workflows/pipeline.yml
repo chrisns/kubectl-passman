@@ -83,10 +83,8 @@ jobs:
       - name: Publish to release
         if: github.event_name == 'push'
         run: |
-          zip build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}.zip build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
-          shasum -a 256 build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}.zip > build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}.zip.sha256
-          shasum -a 256 build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}} > build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}.sha256
-          hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}} -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
-          hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-passman${{matrix.OS}}-${{matrix.ARCH}}.zip -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
+          zip build/kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip build/kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+          hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}} -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
+          hub-darwin-amd64-2.12.7/bin/hub release edit -a build/kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip -m "Latest build of ${{github.ref}}" "build-${{github.ref}}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -138,3 +138,4 @@ issues:
       linters:
         - unused
         - godox
+        - lll

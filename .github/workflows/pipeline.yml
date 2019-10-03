@@ -1,6 +1,8 @@
 name: CI Pipeline
 on:
   push:
+    paths-ignore:
+      - README.md
     branches:
       - "**"
     tags-ignore:

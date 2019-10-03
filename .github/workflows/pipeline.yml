@@ -68,6 +68,10 @@ jobs:
         env:
           GOOS: ${{matrix.OS}}
           GOARCH: ${{matrix.ARCH}}
+      - run: chmod +x build/kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
+        env:
+          GOOS: ${{matrix.OS}}
+          GOARCH: ${{matrix.ARCH}}
       - uses: actions/upload-artifact@v1
         with:
           name: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}

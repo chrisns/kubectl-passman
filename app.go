@@ -74,7 +74,10 @@ type response struct {
 }
 
 func formatResponse(res *response) string {
-	defaults.Set(res)
+	err := defaults.Set(res)
+	if err != nil {
+		panic(err)
+	}
 	jsonResponse, _ := json.Marshal(res)
 	return string(jsonResponse)
 }

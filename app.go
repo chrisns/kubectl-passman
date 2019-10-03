@@ -19,8 +19,10 @@ func main() {
 		secret = opgetter(os.Args[1:][1])
 	}
 	res := &response{}
-	json.Unmarshal([]byte(secret), &res.Status)
-
+	err := json.Unmarshal([]byte(secret), &res.Status)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(formatResponse(res))
 }
 

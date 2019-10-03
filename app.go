@@ -21,7 +21,7 @@ func main() {
 	res := &response{}
 	json.Unmarshal([]byte(secret), &res.Status)
 
-	fmt.Println(string(formatResponse(res)))
+	fmt.Println(formatResponse(res))
 }
 
 var defaultOp = func(itemName string) (*opResponse, error) {

@@ -59,5 +59,5 @@ func Test_opgetter_password_not_found(t *testing.T) {
 			},
 		}, nil
 	}
-	require.Panics(t, func() { opgetter("test") }) // TODO: panics with index out of range; is this expected behaviour?
+	require.Panics(t, func() { opgetter("test") }) // TODO: panics with index out of range; is this expected behavior?
 }

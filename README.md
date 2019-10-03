@@ -128,27 +128,3 @@ go build
 ## Contributing
 
 I :heart: contributions, it'd be great if you could add support for your favourite password manager, work on something from the [TODO](#TODO) or any open issues as a priority, but anything else that takes your fancy too is great, though best to raise an issue to discuss before investing time into it.
-
-## TODO
-
-- [x] rename project ~~k8s-user-passmanager~~ kubectl-passman to math a compatible named binary
-- [x] skeleton readme doc
-- [ ] retrieve from:
-  - [x] osx keychain
-  - [x] 1Password
-  - [ ] keepass/varients
-  - [ ] lastpass
-- [ ] validate that kubectl is official signed build before executing
-- [ ] CI/CD/CD
-  - [x] lint
-  - [x] test
-  - [x] build binaries
-    - [x] osx
-    - [x] *nix
-    - [x] windows
-    - [x] x86?
-    - [x] arm?
-    - [ ] docker?
-  - [x] publish binaries to github releases
-  - [ ] install via [krew](https://github.com/kubernetes-sigs/krew/blob/master/docs/DEVELOPER_GUIDE.md)
-  - [ ] cli interface for abstracting creating new credentials in your password manager e.g. `kubectl passman keychain create [item name] --token=[my token]`

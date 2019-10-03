@@ -118,7 +118,8 @@ linters:
   #   - whitespace
 
   enable-all: true
-  # disable:
+  disable:
+    - gochecknoglobals
   #   - maligned
   #   - prealloc
   # disable-all: false

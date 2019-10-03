@@ -78,6 +78,9 @@ func formatResponse(res *response) string {
 	if err != nil {
 		panic(err)
 	}
-	jsonResponse, _ := json.Marshal(res)
+	jsonResponse, err := json.Marshal(res)
+	if err != nil {
+		panic(err)
+	}
 	return string(jsonResponse)
 }

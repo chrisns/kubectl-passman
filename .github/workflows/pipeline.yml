@@ -13,9 +13,17 @@ env:
   HUB_VERSION: 2.12.7
   HUB_OS: darwin
   HUB_ARCH: amd64
-  REF: build-${{github.ref}}
 
 jobs:
+  release-name:
+    name: Generate a release name to use
+    runs-on: ubuntu-latest
+    steps:
+      - runs: echo $GITHUB_REF | sed -e 's/.*\///g' > VERSION
+      - uses: actions/upload-artifact@v1
+        with:
+          name: VERSION
+
   secret-check:
     name: Secret check
     runs-on: ubuntu-latest
@@ -37,6 +45,7 @@ jobs:
   test-build-publish:
     name: Test and Build
     runs-on: macOS-latest
+    needs: release-name
     strategy:
       fail-fast: false
       max-parallel: 30
@@ -96,16 +105,19 @@ jobs:
       - name: fetch hub
         if: github.event_name == 'push'
         run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
+      - uses: actions/download-artifact@v1
+        with:
+          name: VERSION
       - name: create pre-release if it doesn't exist
         if: github.event_name == 'push'
-        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release create -p -m "Latest build of ${{github.ref}}" "${REF}" || echo release already exists
+        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release create -p -m "Latest build of ${{github.ref}}" "$(cat VERSION)" || echo release already exists
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: zip kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip ${BUILD_FILENAME}
       - name: Publish to release
         if: github.event_name == 'push'
         run: |
-          hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a ${BUILD_FILENAME} -a ${ZIP_FILENAME} -m "Latest build of ${{github.ref}}" "${REF}"
+          hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a ${BUILD_FILENAME} -a ${ZIP_FILENAME} -m "Latest build of ${{github.ref}}" "$(cat VERSION)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -120,7 +132,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
-      - run: hub-linux-amd64-2.12.7/bin/hub release download "${REF}"
+      - uses: actions/download-artifact@v1
+        with:
+          name: VERSION
+      - run: hub-linux-amd64-2.12.7/bin/hub release download "$(cat VERSION)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: krew/generate-shas.sh > krew/shas.yaml
@@ -135,6 +150,6 @@ jobs:
           name: passman.yaml
           path: passman.yaml
       - name: Publish krew manifest to release
-        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a passman.yaml -m "Latest build of ${{github.ref}}" "${REF}"
+        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a passman.yaml -m "Latest build of ${{github.ref}}" "$(cat VERSION)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

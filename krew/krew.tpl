@@ -3,7 +3,7 @@ kind: Plugin
 metadata:
   name: passman
 spec:
-  version: "v{{ env "VERSION"}}"
+  version: "{{ env "VERSION"}}"
   platforms:
     - selector:
         matchLabels:

@@ -111,14 +111,14 @@ jobs:
           name: VERSION
       - name: create pre-release if it doesn't exist
         if: github.event_name == 'push'
-        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release create -p -m "Latest build of ${{github.ref}}" "$(cat VERSION)" || echo release already exists
+        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release create -p -m "Latest build of ${{github.ref}}" "$(cat VERSION/VERSION)" || echo release already exists
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: zip kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip ${BUILD_FILENAME}
       - name: Publish to release
         if: github.event_name == 'push'
         run: |
-          hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a ${BUILD_FILENAME} -a ${ZIP_FILENAME} -m "Latest build of ${{github.ref}}" "$(cat VERSION)"
+          hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a ${BUILD_FILENAME} -a ${ZIP_FILENAME} -m "Latest build of ${{github.ref}}" "$(cat VERSION/VERSION)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -136,14 +136,14 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: VERSION
-      - run: hub-linux-amd64-2.12.7/bin/hub release download "$(cat VERSION)"
+      - run: hub-linux-amd64-2.12.7/bin/hub release download "$(cat VERSION/VERSION)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: krew/generate-shas.sh > krew/shas.yaml
       - name: template krew manifest
         run: |
           go get github.com/yngveh/sprig-cli
-          VERSION=$(cat VERSION) $(go env GOPATH)/bin/sprig-cli -tmpl krew/krew.tpl -data krew/shas.yaml > passman.yaml
+          VERSION=$(cat VERSION/VERSION) $(go env GOPATH)/bin/sprig-cli -tmpl krew/krew.tpl -data krew/shas.yaml > passman.yaml
       - name: show krew manifest
         run: cat passman.yaml
       - uses: actions/upload-artifact@v1
@@ -151,6 +151,6 @@ jobs:
           name: passman.yaml
           path: passman.yaml
       - name: Publish krew manifest to release
-        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a passman.yaml -m "Latest build of ${{github.ref}}" "$(cat VERSION)"
+        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a passman.yaml -m "Latest build of ${{github.ref}}" "$(cat VERSION/VERSION)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

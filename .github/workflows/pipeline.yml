@@ -118,7 +118,7 @@ jobs:
       - name: Publish to release
         if: github.event_name == 'push'
         run: |
-          hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a ${BUILD_FILENAME} -a ${ZIP_FILENAME} -m "Latest build of ${{github.ref}}" "$(cat VERSION/VERSION)"
+          hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a ${ZIP_FILENAME} -m "Latest build of ${{github.ref}}" "$(cat VERSION/VERSION)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

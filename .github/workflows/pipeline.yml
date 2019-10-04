@@ -19,7 +19,7 @@ jobs:
     name: Generate a release name to use
     runs-on: ubuntu-latest
     steps:
-      - runs: echo $GITHUB_REF | sed -e 's/.*\///g' > VERSION
+      - run: echo $GITHUB_REF | sed -e 's/.*\///g' > VERSION
       - uses: actions/upload-artifact@v1
         with:
           name: VERSION

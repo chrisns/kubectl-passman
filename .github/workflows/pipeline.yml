@@ -31,7 +31,7 @@ jobs:
         run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
       - name: create pre-release if it doesn't exist
         if: github.event_name == 'push'
-        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release create -p -m "Latest build of ${{github.ref}}" "$(cat VERSION/VERSION)" || echo release already exists
+        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release create -p -m "Latest build of ${{github.ref}}" "$(cat VERSION)" || echo release already exists
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

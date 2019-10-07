@@ -9,7 +9,7 @@ spec:
         matchLabels:
           os: darwin
           arch: amd64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-darwin-amd64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-darwin-amd64.zip
       sha256: "{{.kubectl_passman_darwin_amd64}}"
       bin: "./kubectl-passman"
       files:
@@ -20,7 +20,7 @@ spec:
         matchLabels:
           os: darwin
           arch: 386
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-darwin-386.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-darwin-386.zip
       sha256: "{{.kubectl_passman_darwin_386}}"
       bin: "./kubectl-passman"
       files:
@@ -31,7 +31,7 @@ spec:
         matchLabels:
           os: freebsd
           arch: 386
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-freebsd-386.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-freebsd-386.zip
       sha256: "{{.kubectl_passman_freebsd_386}}"
       bin: "./kubectl-passman"
       files:
@@ -42,7 +42,7 @@ spec:
         matchLabels:
           os: freebsd
           arch: amd64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-freebsd-amd64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-freebsd-amd64.zip
       sha256: "{{.kubectl_passman_freebsd_386}}"
       bin: "./kubectl-passman"
       files:
@@ -53,7 +53,7 @@ spec:
         matchLabels:
           os: freebsd
           arch: arm
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-freebsd-arm.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-freebsd-arm.zip
       sha256: "{{.kubectl_passman_freebsd_arm}}"
       bin: "./kubectl-passman"
       files:
@@ -64,7 +64,7 @@ spec:
         matchLabels:
           os: linux
           arch: arm
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-linux-arm.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-linux-arm.zip
       sha256: "{{.kubectl_passman_linux_arm}}"
       bin: "./kubectl-passman"
       files:
@@ -75,7 +75,7 @@ spec:
         matchLabels:
           os: linux
           arch: 386
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-linux-386.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-linux-386.zip
       sha256: "{{.kubectl_passman_linux_386}}"
       bin: "./kubectl-passman"
       files:
@@ -86,7 +86,7 @@ spec:
         matchLabels:
           os: linux
           arch: amd64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-linux-amd64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-linux-amd64.zip
       sha256: "{{.kubectl_passman_linux_amd64}}"
       bin: "./kubectl-passman"
       files:
@@ -97,7 +97,7 @@ spec:
         matchLabels:
           os: linux
           arch: arm64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-linux-arm64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-linux-arm64.zip
       sha256: "{{.kubectl_passman_linux_arm64}}"
       bin: "./kubectl-passman"
       files:
@@ -108,7 +108,7 @@ spec:
         matchLabels:
           os: netbsd
           arch: arm64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-netbsd-arm64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-netbsd-arm64.zip
       sha256: "{{.kubectl_passman_netbsd_arm64}}"
       bin: "./kubectl-passman"
       files:
@@ -119,7 +119,7 @@ spec:
         matchLabels:
           os: netbsd
           arch: arm
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-netbsd-arm.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-netbsd-arm.zip
       sha256: "{{.kubectl_passman_netbsd_arm}}"
       bin: "./kubectl-passman"
       files:
@@ -130,7 +130,7 @@ spec:
         matchLabels:
           os: netbsd
           arch: 386
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-netbsd-386.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-netbsd-386.zip
       sha256: "{{.kubectl_passman_netbsd_386}}"
       bin: "./kubectl-passman"
       files:
@@ -141,7 +141,7 @@ spec:
         matchLabels:
           os: netbsd
           arch: amd64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-netbsd-amd64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-netbsd-amd64.zip
       sha256: "{{.kubectl_passman_netbsd_amd64}}"
       bin: "./kubectl-passman"
       files:
@@ -152,7 +152,7 @@ spec:
         matchLabels:
           os: openbsd
           arch: amd64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-openbsd-amd64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-openbsd-amd64.zip
       sha256: "{{.kubectl_passman_openbsd_amd64}}"
       bin: "./kubectl-passman"
       files:
@@ -163,7 +163,7 @@ spec:
         matchLabels:
           os: openbsd
           arch: arm
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-openbsd-arm.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-openbsd-arm.zip
       sha256: "{{.kubectl_passman_openbsd_arm}}"
       bin: "./kubectl-passman"
       files:
@@ -174,7 +174,7 @@ spec:
         matchLabels:
           os: openbsd
           arch: arm64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-openbsd-arm64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-openbsd-arm64.zip
       sha256: "{{.kubectl_passman_openbsd_arm64}}"
       bin: "./kubectl-passman"
       files:
@@ -185,7 +185,7 @@ spec:
         matchLabels:
           os: openbsd
           arch: 386
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-openbsd-386.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-openbsd-386.zip
       sha256: "{{.kubectl_passman_openbsd_386}}"
       bin: "./kubectl-passman"
       files:
@@ -196,7 +196,7 @@ spec:
         matchLabels:
           os: plan9
           arch: 386
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-plan9-386.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-plan9-386.zip
       sha256: "{{.kubectl_passman_plan9_386}}"
       bin: "./kubectl-passman"
       files:
@@ -207,7 +207,7 @@ spec:
         matchLabels:
           os: plan9
           arch: amd64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-plan9-amd64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-plan9-amd64.zip
       sha256: "{{.kubectl_passman_plan9_amd64}}"
       bin: "./kubectl-passman"
       files:
@@ -218,7 +218,7 @@ spec:
         matchLabels:
           os: plan9
           arch: arm
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-plan9-arm.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-plan9-arm.zip
       sha256: "{{.kubectl_passman_plan9_arm}}"
       bin: "./kubectl-passman"
       files:
@@ -229,7 +229,7 @@ spec:
         matchLabels:
           os: solaris
           arch: amd64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-solaris-amd64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-solaris-amd64.zip
       sha256: "{{.kubectl_passman_solaris_amd64}}"
       bin: "./kubectl-passman"
       files:
@@ -240,7 +240,7 @@ spec:
         matchLabels:
           os: windows
           arch: amd64
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-windows-amd64.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-windows-amd64.zip
       sha256: "{{.kubectl_passman_windows_amd64}}"
       bin: "./kubectl-passman.exe"
       files:
@@ -251,7 +251,7 @@ spec:
         matchLabels:
           os: windows
           arch: 386
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-windows-386.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-windows-386.zip
       sha256: "{{.kubectl_passman_windows_386}}"
       bin: "./kubectl-passman.exe"
       files:
@@ -262,7 +262,7 @@ spec:
         matchLabels:
           os: windows
           arch: arm
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "REF"}}/kubectl-passman-windows-arm.zip
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-windows-arm.zip
       sha256: "{{.kubectl_passman_windows_arm}}"
       bin: "./kubectl-passman.exe"
       files:

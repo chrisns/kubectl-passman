@@ -3,7 +3,7 @@ kind: Plugin
 metadata:
   name: passman
 spec:
-  version: "{{ if not (hasPrefix "v" (env "VERSION")) }}v.0.0-{{ end }}{{ env "VERSION" }}"
+  version: "{{ if not (hasPrefix "v" (env "VERSION")) }}v.0.0.0-{{ end }}{{ env "VERSION" }}"
   platforms:
     - selector:
         matchLabels:

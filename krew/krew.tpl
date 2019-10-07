@@ -82,17 +82,6 @@ spec:
         - from: kubectl-passman-windows-386.exe
           to: kubectl-passman.exe
 
-    - selector:
-        matchLabels:
-          os: windows
-          arch: arm
-      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-windows-arm.zip
-      sha256: "{{.kubectl_passman_windows_arm}}"
-      bin: "./kubectl-passman.exe"
-      files:
-        - from: kubectl-passman-windows-arm.exe
-          to: kubectl-passman.exe
-
   shortDescription: kubectl plugin that aspires to provide the missing link/glue between common password managers and kubectl
   homepage: https://github.com/chrisns/kubectl-passman
   caveats: |

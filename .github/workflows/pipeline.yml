@@ -147,6 +147,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: krew/generate-shas.sh > krew/shas.yaml
+      - run: krew/generate-shas.sh > krew/shas.yaml
       - name: template krew manifest
         run: |
           go get github.com/yngveh/sprig-cli

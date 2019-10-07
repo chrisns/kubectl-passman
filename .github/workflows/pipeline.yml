@@ -18,12 +18,22 @@ jobs:
   release-name:
     name: Generate a release name to use
     runs-on: ubuntu-latest
+    env:
+      HUB_OS: linux
     steps:
       - run: echo $GITHUB_REF | sed -e 's/.*\///g' > VERSION
       - uses: actions/upload-artifact@v1
         with:
           name: VERSION
           path: VERSION
+      - name: fetch hub
+        if: github.event_name == 'push'
+        run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
+      - name: create pre-release if it doesn't exist
+        if: github.event_name == 'push'
+        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release create -p -m "Latest build of ${{github.ref}}" "$(cat VERSION/VERSION)" || echo release already exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   secret-check:
     name: Secret check
@@ -49,7 +59,7 @@ jobs:
     needs: release-name
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 8
       matrix:
         OS:
           - darwin
@@ -103,18 +113,13 @@ jobs:
         with:
           name: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
           path: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
-      - name: fetch hub
-        if: github.event_name == 'push'
-        run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
       - uses: actions/download-artifact@v1
         with:
           name: VERSION
-      - name: create pre-release if it doesn't exist
-        if: github.event_name == 'push'
-        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release create -p -m "Latest build of ${{github.ref}}" "$(cat VERSION/VERSION)" || echo release already exists
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: zip kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip ${BUILD_FILENAME}
+      - name: fetch hub
+        if: github.event_name == 'push'
+        run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
       - name: Publish to release
         if: github.event_name == 'push'
         run: |

@@ -18,7 +18,7 @@ var VERSION = "0.0.0"
 
 var app = cli.NewApp()
 
-func commands() {
+func cli_commands() {
 	app.Commands = []cli.Command{
 		{
 			Name:      "keychain",
@@ -40,7 +40,7 @@ func commands() {
 	}
 }
 
-func info() {
+func cli_info() {
 	app.Name = "kubectl-passman"
 	app.Usage = "Store kubeconfig credentials in keychains or password managers"
 	app.Authors = []cli.Author{
@@ -56,8 +56,8 @@ func info() {
 }
 
 func main() {
-	info()
-	commands()
+	cli_info()
+	cli_commands()
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)

@@ -11,7 +11,8 @@
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/chrisns/kubectl-passman) 
 ![GitHub repo size](https://img.shields.io/github/repo-size/chrisns/kubectl-passman) 
 ![GitHub contributors](https://img.shields.io/github/contributors/chrisns/kubectl-passman)
-![GitHub last commit](https://img.shields.io/github/last-commit/chrisns/kubectl-passman)
+![GitHub last commit](https://img.shields.io/github/last-commit/chrisns/kubectl-passman) 
+[![Go Report Card](https://goreportcard.com/badge/github.com/chrisns/kubectl-passman)](https://goreportcard.com/report/github.com/chrisns/kubectl-passman)
 
  > :heavy_exclamation_mark: An easy way to store your kubernetes credentials in a keychain or password manager
 

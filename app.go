@@ -78,7 +78,7 @@ func main() {
 	}
 }
 
-func write(handler string, itemName string, secret string) error {
+func write(handler string, itemName, secret string) error {
 	if handler == "keychain" {
 		keychainWriter(itemName, secret)
 	}
@@ -88,7 +88,7 @@ func write(handler string, itemName string, secret string) error {
 	return nil
 }
 
-func read(handler string, itemName string) error {
+func read(handler, itemName string) error {
 	var secret string
 	if handler == "keychain" {
 		secret = keychainFetcher(itemName)

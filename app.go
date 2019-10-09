@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
-	"sort"
 
 	"github.com/urfave/cli"
 
@@ -26,10 +24,10 @@ func cli_commands() {
 			ArgsUsage: "[item-name]",
 			Action: func(c *cli.Context) error {
 				var itemName = c.Args().Get(0)
+				var secret = c.Args().Get(1)
 				if itemName == "" {
 					return cli.NewExitError("Please provide [item-name]", 1)
 				}
-				var secret = c.Args().Get(1)
 				if secret != "" {
 					return write("keychain", itemName, secret, c)
 				}
@@ -43,13 +41,13 @@ func cli_commands() {
 			ArgsUsage: "[item-name]",
 			Action: func(c *cli.Context) error {
 				var itemName = c.Args().Get(0)
+				var secret = c.Args().Get(1)
 				if itemName == "" {
 					return cli.NewExitError("Please provide [item-name]", 1)
 				}
-				// var secret = c.Args().Get(1)
-				// if secret != "" {
-				// 	return write("1password", itemName, secret, c)
-				// }
+				if secret != "" {
+					return write("1password", itemName, secret, c)
+				}
 				return read("1password", itemName, c)
 			},
 		},
@@ -84,9 +82,9 @@ func write(handler string, itemName string, secret string, c *cli.Context) error
 	if handler == "keychain" {
 		keychainWriter(itemName, secret)
 	}
-	// if handler == "1password" {
-	// 	secret = opgetter(itemName)
-	// }
+	if handler == "1password" {
+		opsetter(itemName, secret)
+	}
 	return nil
 }
 
@@ -105,42 +103,6 @@ func read(handler string, itemName string, c *cli.Context) error {
 	}
 	fmt.Println(formatResponse(res))
 	return nil
-}
-
-var defaultOp = func(itemName string) (*opResponse, error) {
-	out, err := exec.Command("op", "get", "item", itemName).Output()
-	if err != nil {
-		return nil, err
-	}
-	var resp opResponse
-	err = json.Unmarshal(out, &resp)
-	if err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}
-
-func opgetter(itemName string) string {
-	resp, err := defaultOp(itemName)
-	if err != nil {
-		panic(err)
-	}
-	i := sort.Search(len(resp.Details.Fields), func(i int) bool { return resp.Details.Fields[i].Name == "password" })
-	return resp.Details.Fields[i].Value
-}
-
-type opResponse struct {
-	UUID    string            `json:"uuid"`
-	Details opResponseDetails `json:"details"`
-}
-type opResponseDetails struct {
-	Fields []opResponseField `json:"fields"`
-	Title  string            `json:"title"`
-}
-
-type opResponseField struct {
-	Name  string `json:"name"`
-	Value string `json:"value"`
 }
 
 type responseStatus struct {

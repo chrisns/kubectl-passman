@@ -46,14 +46,14 @@ jobs:
         with:
           args: -v --exclude-forks --repo-path=. --repo-config
 
-  golangci-lint:
-    name: GolangCI
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: docker://golangci/golangci-lint
-        with:
-          args: golangci-lint run --color=always
+  # golangci-lint:
+  #   name: GolangCI
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - uses: docker://golangci/golangci-lint
+  #       with:
+  #         args: golangci-lint run --color=always
 
   test-build-publish:
     name: Test and Build

@@ -7,5 +7,6 @@ require github.com/stretchr/testify v1.4.0
 require (
 	github.com/creasty/defaults v1.3.0
 	github.com/keybase/go-keychain v0.0.0-20190828153431-2390ae572545
+	github.com/urfave/cli v1.22.1
 	github.com/zalando/go-keyring v0.0.0-20190913082157-62750a1ff80d
 )

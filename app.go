@@ -13,7 +13,9 @@ import (
 	"github.com/creasty/defaults"
 )
 
+// VERSION populated at build time
 var VERSION = "0.0.0"
+
 var app = cli.NewApp()
 
 func commands() {

@@ -67,7 +67,7 @@ func opsetter(itemName, secret string) {
 	}
 
 	stdoutStderr, err := exec.Command("op", "create", "item", "login",
-		base64.StdEncoding.EncodeToString([]byte(jsonResponse)), "--title="+itemName).CombinedOutput()
+		base64.StdEncoding.EncodeToString(jsonResponse), "--title="+itemName).CombinedOutput()
 
 	fmt.Printf("%s\n", stdoutStderr)
 

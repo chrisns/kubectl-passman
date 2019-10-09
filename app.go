@@ -25,7 +25,15 @@ func cli_commands() {
 			Usage:     "Use osx-keychain",
 			ArgsUsage: "[item-name]",
 			Action: func(c *cli.Context) error {
-				return read("keychain", c)
+				var itemName = c.Args().Get(0)
+				if itemName == "" {
+					return cli.NewExitError("Please provide [item-name]", 1)
+				}
+				var secret = c.Args().Get(1)
+				if secret != "" {
+					return write("keychain", itemName, secret, c)
+				}
+				return read("keychain", itemName, c)
 			},
 		},
 		{
@@ -34,7 +42,15 @@ func cli_commands() {
 			Aliases:   []string{"1pass", "op"},
 			ArgsUsage: "[item-name]",
 			Action: func(c *cli.Context) error {
-				return read("1password", c)
+				var itemName = c.Args().Get(0)
+				if itemName == "" {
+					return cli.NewExitError("Please provide [item-name]", 1)
+				}
+				// var secret = c.Args().Get(1)
+				// if secret != "" {
+				// 	return write("1password", itemName, secret, c)
+				// }
+				return read("1password", itemName, c)
 			},
 		},
 	}
@@ -64,11 +80,17 @@ func main() {
 	}
 }
 
-func read(handler string, c *cli.Context) error {
-	var itemName = c.Args().Get(0)
-	if itemName == "" {
-		return cli.NewExitError("Please provide [item-name]", 1)
+func write(handler string, itemName string, secret string, c *cli.Context) error {
+	if handler == "keychain" {
+		keychainWriter(itemName, secret)
 	}
+	// if handler == "1password" {
+	// 	secret = opgetter(itemName)
+	// }
+	return nil
+}
+
+func read(handler string, itemName string, c *cli.Context) error {
 	var secret string
 	if handler == "keychain" {
 		secret = keychainFetcher(itemName)

@@ -3,20 +3,75 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"sort"
 
+	"github.com/urfave/cli"
+
 	"github.com/creasty/defaults"
 )
 
-func main() {
-	var secret string
-	if os.Args[1:][0] == "keychain" {
-		secret = keychainFetcher(os.Args[1:][1])
+var VERSION = "0.0.0"
+var app = cli.NewApp()
+
+func commands() {
+	app.Commands = []cli.Command{
+		{
+			Name:      "keychain",
+			Usage:     "Use osx-keychain",
+			ArgsUsage: "[item-name]",
+			Action: func(c *cli.Context) error {
+				return read("keychain", c)
+			},
+		},
+		{
+			Name:      "1password",
+			Usage:     "Use 1Password",
+			Aliases:   []string{"1pass", "op"},
+			ArgsUsage: "[item-name]",
+			Action: func(c *cli.Context) error {
+				return read("1password", c)
+			},
+		},
 	}
-	if os.Args[1:][0] == "1password" {
-		secret = opgetter(os.Args[1:][1])
+}
+
+func info() {
+	app.Name = "kubectl-passman"
+	app.Usage = "Store kubeconfig credentials in keychains or password managers"
+	app.Authors = []cli.Author{
+		cli.Author{
+			Name:  "Chris Nesbitt-Smith",
+			Email: "chris@cns.me.uk",
+		},
+	}
+	app.Copyright = "(c) 2019 Chris Nesbitt-Smith"
+	app.UsageText = "kubectl-passman [command] [item-name] \n   If stdin is provided it will write to the item, otherwise it will read"
+	app.Version = VERSION
+}
+
+func main() {
+	info()
+	commands()
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func read(handler string, c *cli.Context) error {
+	var itemName = c.Args().Get(0)
+	if itemName == "" {
+		return cli.NewExitError("Please provide [item-name]", 1)
+	}
+	var secret string
+	if handler == "keychain" {
+		secret = keychainFetcher(itemName)
+	}
+	if handler == "1password" {
+		secret = opgetter(itemName)
 	}
 	res := &response{}
 	err := json.Unmarshal([]byte(secret), &res.Status)
@@ -24,6 +79,7 @@ func main() {
 		panic(err)
 	}
 	fmt.Println(formatResponse(res))
+	return nil
 }
 
 var defaultOp = func(itemName string) (*opResponse, error) {

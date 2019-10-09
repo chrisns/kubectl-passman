@@ -103,7 +103,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: go test -v
-      - run: go build -a -o ${BUILD_FILENAME}
+      - uses: actions/download-artifact@v1
+        with:
+          name: VERSION
+      - run: go build -a -ldflags "-X main.VERSION=$(cat VERSION/VERSION)" -o ${BUILD_FILENAME}
         env:
           GOOS: ${{matrix.OS}}
           GOARCH: ${{matrix.ARCH}}

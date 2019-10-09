@@ -44,12 +44,10 @@ go install github.com/chrisns/kubectl-passman
 
 ## Usage
 
-### Shared 
-
 You need to JSON encode the credentials so that should look something like:
 
 ```json
-{"token":"some-token"}
+{"token":"00000000-0000-0000-0000-000000000000"}
 ```
 
 or for a key pair:
@@ -61,69 +59,41 @@ or for a key pair:
 }
 ```
 
-### macOS Keychain
+If they are already in your kube config, you could retrieve them with something like:
 
-You then place the json encoded string in a keychain item, call it whatever you like but keep the account name and item name the same.
+```bash
+kubectl config view -o json | jq '.users[] | select(.name=="kubectl-prod-user") | .user' -c
+```
 
-#### Keypair
+### Write it to the password manager
 
-![Screenshot of adding a keypair](resources/osxkeychain-keypair.png)
+```bash
+kubectl passman keychain kubectl-prod-user '[token]'
+# or
+kubectl passman 1password kubectl-prod-user '[token]'
 
-#### Token
+## so should look like:
+kubectl passman 1password kubectl-prod-user '{"token":"00000000-0000-0000-0000-000000000000"}'
 
-![Screenshot of adding a token](resources/osxkeychain-token.png)
+```
 
 Then add it to the `~/.kube/config`:
 
-```yaml
-apiVersion: v1
-kind: Config
-users:
-- name: my-prod-user
-    user:
-      exec:
-        command: "kubectl-passman"
-        apiVersion: "client.authentication.k8s.io/v1beta1"
-        args:
-          - keychain
-          - kubectl-prod-user
+```bash
+kubectl config set-credentials \
+  kubectl-prod-user \
+ --exec-api-version=client.authentication.k8s.io/v1beta \
+ --exec-command=passman \
+ --exec-arg=keychain \ # or 1password
+ --exec-arg=kubectl-prod-user # name of [item-name] you used when you wrote to the password manager
 ```
 
-### 1Password
-
-You will need the [1Password commandline client installed and configured](https://1password.com/downloads/command-line/). I'm really not sure on how to best handle the session token, storing it in your `~/.kube/config` would probably be even worse than the secret to start with.
-
-You then place the json encoded string in a 1password login item, call it whatever you like
-
-#### Keypair
-
-![Screenshot of adding a keypair](resources/1password-keypair.png)
-
-#### Token
-
-![Screenshot of adding a token](resources/1password-token.png)
-
-Then add it to the `~/.kube/config`:
-
-```yaml
-apiVersion: v1
-kind: Config
-users:
-- name: my-prod-user
-    user:
-      exec:
-        command: "kubectl-passman"
-        apiVersion: "client.authentication.k8s.io/v1beta1"
-        args:
-          - "1password"
-          - kubectl-prod-user
-```
-
-## Compiling
+## Build
 
 ``` bash
 go build
 ```
+> Note: kubectl-passman will build slightly differently on Darwin (Mac OS) to other operation systems because it uses the [go-keychain](https://github.com/keybase/go-keychain) library that needs libraries that only exist on a mac so that it can natively talk to the keychain. When compiling for other operating systems you'll get [go-keyring](https://github.com/zalando/go-keyring) instead but I've abstracted to make the interactions the same.
 
 ## Contributing
 

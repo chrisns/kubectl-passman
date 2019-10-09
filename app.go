@@ -50,8 +50,8 @@ func cli_info() {
 		},
 	}
 	app.Copyright = "(c) 2019 Chris Nesbitt-Smith"
-	app.UsageText = `kubectl-passman [command] [item-name]
-	 If stdin is provided it will write to the item, otherwise it will read`
+	app.UsageText = `kubectl-passman [command] [item-name] [new-value(optional)]
+	 If new-value is provided it will write to the item, otherwise it will read`
 	app.Version = VERSION
 }
 

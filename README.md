@@ -13,7 +13,7 @@
 ![GitHub contributors](https://img.shields.io/github/contributors/chrisns/kubectl-passman)
 ![GitHub last commit](https://img.shields.io/github/last-commit/chrisns/kubectl-passman)
 
- > :heavy_exclamation_mark: An easy way to store your kubernetes credentials in [1password](https://1password.com/) or [Mac OS Keychain](https://support.apple.com/en-gb/guide/keychain-access/kyca1083/mac) (more password managers coming soon)
+ > :heavy_exclamation_mark: An easy way to store your kubernetes credentials in a keychain or password manager
 
 ### Does your `~/.kube/config` look like this:
 
@@ -32,13 +32,23 @@ users:
 
 ## :scream: :scream: :scream: :scream:<br/><br/>Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.doc` on their desktop? <br/><br/> Then you need kubectl-passman!
 
-> a suggestion of a better name is very welcome, it's not too late to change!
+## Works with (more coming)
 
-What this `kubectl` [plugin](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins) does is glue your kubectl config to a common password manager.
+Provider | Supports | Example command 
+--- | --- | ---
+keychain | [Mac OS Keychain](https://support.apple.com/en-gb/guide/keychain-access/kyca1083/mac) <br> [GNOME Keyring](https://wiki.gnome.org/Projects/GnomeKeyring) <br> [Windows Credential Manager](http://blogs.msdn.com/b/visualstudioalm/archive/2015/12/08/announcing-the-git-credential-manager-for-windows-1-0.aspx) | `kubectl passman keychain [item] [token]`
+1password | [1password](https://1password.com/) <br> requires [1password cli](https://1password.com/downloads/command-line/) | `kubectl passman 1password [item] [token]`
 
 ## Installation
 
 ```bash
+# with krew (recommended)
+kubectl krew install passman
+
+# get a binary from https://github.com/chrisns/kubectl-passman/releases/latest
+# place it in PATH and make sure it's called kubectl-passman
+
+# use go to get the most recent
 go install github.com/chrisns/kubectl-passman
 ```
 

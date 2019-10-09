@@ -26,7 +26,7 @@ func Test_formatResponse_override_defaults(t *testing.T) {
 
 func Test_opgetter_happy(t *testing.T) {
 	var expected = "RSA"
-	defaultOp = func(itemName string) (*opResponse, error) {
+	defaultOpGet = func(itemName string) (*opResponse, error) {
 		return &opResponse{
 			Details: opResponseDetails{
 				Fields: []opResponseField{{
@@ -41,7 +41,7 @@ func Test_opgetter_happy(t *testing.T) {
 
 func Test_opgetter_op_fail(t *testing.T) {
 	err := errors.New("test")
-	defaultOp = func(itemName string) (*opResponse, error) {
+	defaultOpGet = func(itemName string) (*opResponse, error) {
 		return nil, err
 	}
 	require.PanicsWithValue(t, err, func() { opgetter("mykubecreds") })
@@ -49,7 +49,7 @@ func Test_opgetter_op_fail(t *testing.T) {
 
 func Test_opgetter_password_not_found(t *testing.T) {
 	var expected = "RSA"
-	defaultOp = func(itemName string) (*opResponse, error) {
+	defaultOpGet = func(itemName string) (*opResponse, error) {
 		return &opResponse{
 			Details: opResponseDetails{
 				Fields: []opResponseField{{

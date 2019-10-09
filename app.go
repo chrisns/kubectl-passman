@@ -78,7 +78,7 @@ func main() {
 	}
 }
 
-func write(handler string, itemName, secret string) error {
+func write(handler, itemName, secret string) error {
 	if handler == "keychain" {
 		keychainWriter(itemName, secret)
 	}

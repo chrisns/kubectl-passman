@@ -42,7 +42,7 @@ func info() {
 	app.Name = "kubectl-passman"
 	app.Usage = "Store kubeconfig credentials in keychains or password managers"
 	app.Authors = []cli.Author{
-		cli.Author{
+		{
 			Name:  "Chris Nesbitt-Smith",
 			Email: "chris@cns.me.uk",
 		},

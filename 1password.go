@@ -43,14 +43,16 @@ func opgetter(itemName string) string {
 	if err != nil {
 		panic(err)
 	}
-	i := sort.Search(len(resp.Details.Fields), func(i int) bool { return resp.Details.Fields[i].Designation == "password" })
+	i := sort.Search(len(resp.Details.Fields), func(i int) bool {
+		return resp.Details.Fields[i].Designation == "password"
+	})
 	return resp.Details.Fields[i].Value
 }
 
-func opsetter(itemName string, secret string) {
+func opsetter(itemName, secret string) {
 	var res = &opResponseDetails{
 		Fields: []opResponseField{
-			opResponseField{
+			{
 				Name:        "password",
 				Designation: "password",
 				Type:        "P",
@@ -64,7 +66,9 @@ func opsetter(itemName string, secret string) {
 		panic(err)
 	}
 
-	stdoutStderr, err := exec.Command("op", "create", "item", "login", base64.StdEncoding.EncodeToString([]byte(jsonResponse)), "--title="+itemName).CombinedOutput()
+	stdoutStderr, err := exec.Command("op", "create", "item", "login",
+		base64.StdEncoding.EncodeToString([]byte(jsonResponse)), "--title="+itemName).CombinedOutput()
+
 	fmt.Printf("%s\n", stdoutStderr)
 
 	if err != nil {

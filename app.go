@@ -16,7 +16,7 @@ var VERSION = "0.0.0"
 
 var app = cli.NewApp()
 
-func cli_commands() {
+func cliCommands() {
 	app.Commands = []cli.Command{
 		{
 			Name:      "keychain",
@@ -29,9 +29,9 @@ func cli_commands() {
 					return cli.NewExitError("Please provide [item-name]", 1)
 				}
 				if secret != "" {
-					return write("keychain", itemName, secret, c)
+					return write("keychain", itemName, secret)
 				}
-				return read("keychain", itemName, c)
+				return read("keychain", itemName)
 			},
 		},
 		{
@@ -46,15 +46,15 @@ func cli_commands() {
 					return cli.NewExitError("Please provide [item-name]", 1)
 				}
 				if secret != "" {
-					return write("1password", itemName, secret, c)
+					return write("1password", itemName, secret)
 				}
-				return read("1password", itemName, c)
+				return read("1password", itemName)
 			},
 		},
 	}
 }
 
-func cli_info() {
+func cliInfo() {
 	app.Name = "kubectl-passman"
 	app.Usage = "Store kubeconfig credentials in keychains or password managers"
 	app.Authors = []cli.Author{
@@ -70,15 +70,15 @@ func cli_info() {
 }
 
 func main() {
-	cli_info()
-	cli_commands()
+	cliInfo()
+	cliCommands()
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func write(handler string, itemName string, secret string, c *cli.Context) error {
+func write(handler string, itemName string, secret string) error {
 	if handler == "keychain" {
 		keychainWriter(itemName, secret)
 	}
@@ -88,7 +88,7 @@ func write(handler string, itemName string, secret string, c *cli.Context) error
 	return nil
 }
 
-func read(handler string, itemName string, c *cli.Context) error {
+func read(handler string, itemName string) error {
 	var secret string
 	if handler == "keychain" {
 		secret = keychainFetcher(itemName)

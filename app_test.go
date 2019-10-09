@@ -61,3 +61,15 @@ func Test_opgetter_password_not_found(t *testing.T) {
 	}
 	require.Panics(t, func() { opgetter("test") }) // TODO: panics with index out of range; is this expected behavior?
 }
+
+func Test_cli_info(t *testing.T) {
+	cli_info()
+	require.Equal(t, app.Name, "kubectl-passman")
+	require.Equal(t, app.Version, "0.0.0")
+}
+
+func Test_commands(t *testing.T) {
+	cli_commands()
+	require.Equal(t, app.Commands[0].Name, "keychain")
+	require.Equal(t, app.Commands[1].Name, "1password")
+}

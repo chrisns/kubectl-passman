@@ -88,6 +88,4 @@ spec:
     This plugin needs a usable keychain or password manager
     See usage docs https://github.com/chrisns/kubectl-passman
   description: |
-    An easy way to store your kubernetes credentials in 1password,
-    GNOME Keyring or Mac OS Keychain
-    (more password managers coming soon)
+    An effective way to keep your credentials somewhere better than in plain text

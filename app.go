@@ -51,6 +51,22 @@ func cliCommands() {
 				return read("1password", itemName)
 			},
 		},
+		{
+			Name:      "gopass",
+			Usage:     "Use gopass",
+			ArgsUsage: "[item-name]",
+			Action: func(c *cli.Context) error {
+				var itemName = c.Args().Get(0)
+				var secret = c.Args().Get(1)
+				if itemName == "" {
+					return cli.NewExitError("Please provide [item-name]", 1)
+				}
+				if secret != "" {
+					return write("gopass", itemName, secret)
+				}
+				return read("gopass", itemName)
+			},
+		},
 	}
 }
 
@@ -85,6 +101,9 @@ func write(handler, itemName, secret string) error {
 	if handler == "1password" {
 		opsetter(itemName, secret)
 	}
+	if handler == "gopass" {
+		gopassSetter(itemName, secret)
+	}
 	return nil
 }
 
@@ -95,6 +114,9 @@ func read(handler, itemName string) error {
 	}
 	if handler == "1password" {
 		secret = opgetter(itemName)
+	}
+	if handler == "gopass" {
+		secret = gopassGetter(itemName)
 	}
 	res := &response{}
 	err := json.Unmarshal([]byte(secret), &res.Status)

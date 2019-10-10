@@ -20,7 +20,8 @@ func cliCommands() {
 	app.Commands = []cli.Command{
 		{
 			Name:      "keychain",
-			Usage:     "Use osx-keychain",
+			Usage:     "Use keychain/keyring",
+			Aliases:   []string{"keyring"},
 			ArgsUsage: "[item-name]",
 			Action: func(c *cli.Context) error {
 				var itemName = c.Args().Get(0)

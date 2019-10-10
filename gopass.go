@@ -21,7 +21,6 @@ func gopassGetter(itemName string) string {
 }
 
 func gopassSetter(itemName, secret string) {
-
 	cmd := exec.Command("gopass", "insert", "--force", itemName)
 	stdin, err := cmd.StdinPipe()
 	if err != nil {

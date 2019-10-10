@@ -29,7 +29,7 @@ func gopassSetter(itemName, secret string) {
 
 	go func() {
 		defer stdin.Close()
-		err := io.WriteString(stdin, secret)
+		_, err := io.WriteString(stdin, secret)
 		if err != nil {
 			log.Fatal(err)
 		}

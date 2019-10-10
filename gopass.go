@@ -9,7 +9,7 @@ import (
 
 var defaultGopassGet = func(itemName string) (string, error) {
 	out, err := exec.Command("gopass", "show", "--password", itemName).Output()
-	return err, string(out)
+	return string(out), err
 }
 
 func gopassGetter(itemName string) string {

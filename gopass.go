@@ -7,13 +7,13 @@ import (
 	"os/exec"
 )
 
-var defaultGopassGet = func(itemName string) (error, string) {
+var defaultGopassGet = func(itemName string) (string, error) {
 	out, err := exec.Command("gopass", "show", "--password", itemName).Output()
 	return err, string(out)
 }
 
 func gopassGetter(itemName string) string {
-	err, resp := defaultGopassGet(itemName)
+	resp, err := defaultGopassGet(itemName)
 	if err != nil {
 		panic(err)
 	}

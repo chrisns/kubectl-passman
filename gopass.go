@@ -30,7 +30,10 @@ func gopassSetter(itemName, secret string) {
 
 	go func() {
 		defer stdin.Close()
-		io.WriteString(stdin, secret)
+		err := io.WriteString(stdin, secret)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}()
 
 	out, err := cmd.CombinedOutput()

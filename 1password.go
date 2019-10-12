@@ -47,7 +47,7 @@ func opgetter(itemName string) (string, error) {
 			return v.Value, nil
 		}
 	}
-	return "", errors.New("Unable to find password")
+	return "", errors.New("unable to find password")
 }
 
 func opsetter(itemName, secret string) error {

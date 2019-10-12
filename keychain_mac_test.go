@@ -11,23 +11,27 @@ import (
 )
 
 func Test_keychainFetcher_NoKeychainError(t *testing.T) {
-	panicker := func() {
-		defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
-			return nil, errors.New("error")
-		}
-		keychainFetcher("error")
+	defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
+		return nil, errors.New("error")
 	}
-	require.PanicsWithValue(t, "unable to connect to keychain", panicker)
+	_, err := keychainFetcher("ff")
+	require.Equal(t, "unable to connect to keychain", err.Error())
 }
+
 func Test_keychainFetcher_NoItemFoundError(t *testing.T) {
-	panicker := func() {
-		// TODO: MOCK keychain.QueryItem(query) returns empty array
-		defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
-			return nil, nil
-		}
-		keychainFetcher("doesn't exist")
+	defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
+		return nil, nil
 	}
-	require.PanicsWithValue(t, "item doesn't exist", panicker)
+	_, err := keychainFetcher("ff")
+	require.Equal(t, "item doesn't exist", err.Error())
+}
+
+func Test_keychainFetcher_ToManyMatching(t *testing.T) {
+	defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
+		return []keychain.QueryResult{{Data: []byte("foo")}, {Data: []byte("foo")}}, nil
+	}
+	_, err := keychainFetcher("ff")
+	require.Equal(t, "too many matching items", err.Error())
 }
 
 func Test_keychainFetcher_ItemFound(t *testing.T) {
@@ -35,5 +39,8 @@ func Test_keychainFetcher_ItemFound(t *testing.T) {
 	defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
 		return []keychain.QueryResult{{Data: []byte(expected)}}, nil
 	}
-	require.Contains(t, expected, keychainFetcher("gabriel"))
+	actual, err := keychainFetcher("ff")
+
+	require.Contains(t, expected, actual)
+	require.Nil(t, err)
 }

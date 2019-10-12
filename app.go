@@ -23,52 +23,36 @@ func cliCommands() {
 			Usage:     "Use keychain/keyring",
 			Aliases:   []string{"keyring"},
 			ArgsUsage: "[item-name]",
-			Action: func(c *cli.Context) error {
-				var itemName = c.Args().Get(0)
-				var secret = c.Args().Get(1)
-				if itemName == "" {
-					return cli.NewExitError("Please provide [item-name]", 1)
-				}
-				if secret != "" {
-					return write("keychain", itemName, secret)
-				}
-				return read("keychain", itemName)
-			},
+			Action:    cliHandler,
 		},
 		{
 			Name:      "1password",
 			Usage:     "Use 1Password",
 			Aliases:   []string{"1pass", "op"},
 			ArgsUsage: "[item-name]",
-			Action: func(c *cli.Context) error {
-				var itemName = c.Args().Get(0)
-				var secret = c.Args().Get(1)
-				if itemName == "" {
-					return cli.NewExitError("Please provide [item-name]", 1)
-				}
-				if secret != "" {
-					return write("1password", itemName, secret)
-				}
-				return read("1password", itemName)
-			},
+			Action:    cliHandler,
 		},
 		{
 			Name:      "gopass",
 			Usage:     "Use gopass",
 			ArgsUsage: "[item-name]",
-			Action: func(c *cli.Context) error {
-				var itemName = c.Args().Get(0)
-				var secret = c.Args().Get(1)
-				if itemName == "" {
-					return cli.NewExitError("Please provide [item-name]", 1)
-				}
-				if secret != "" {
-					return write("gopass", itemName, secret)
-				}
-				return read("gopass", itemName)
-			},
+			Action:    cliHandler,
 		},
 	}
+}
+
+func cliHandler(c *cli.Context) error {
+	var handler string = c.Command.Name
+	var itemName = c.Args().Get(0)
+	var secret = c.Args().Get(1)
+	if itemName == "" {
+		return cli.NewExitError("Please provide [item-name]", 1)
+	}
+	if secret != "" {
+		return write(handler, itemName, secret)
+	}
+	return read(handler, itemName)
+
 }
 
 func cliInfo() {
@@ -96,36 +80,41 @@ func main() {
 }
 
 func write(handler, itemName, secret string) error {
+	// TODO: validate secret is valid by marshalling it
 	if handler == "keychain" {
-		keychainWriter(itemName, secret)
-	}
-	if handler == "1password" {
-		opsetter(itemName, secret)
-	}
-	if handler == "gopass" {
-		gopassSetter(itemName, secret)
+		return keychainWriter(itemName, secret)
+	} else if handler == "1password" {
+		return opsetter(itemName, secret)
+	} else if handler == "gopass" {
+		return gopassSetter(itemName, secret)
 	}
 	return nil
 }
 
 func read(handler, itemName string) error {
 	var secret string
+	var err error
+	var out string
+
 	if handler == "keychain" {
-		secret = keychainFetcher(itemName)
+		secret, err = keychainFetcher(itemName)
+	} else if handler == "1password" {
+		secret, err = opgetter(itemName)
+	} else if handler == "gopass" {
+		secret, err = gopassGetter(itemName)
 	}
-	if handler == "1password" {
-		secret = opgetter(itemName)
-	}
-	if handler == "gopass" {
-		secret = gopassGetter(itemName)
+
+	if err != nil {
+		return err
 	}
 	res := &response{}
-	err := json.Unmarshal([]byte(secret), &res.Status)
+	err = json.Unmarshal([]byte(secret), &res.Status)
 	if err != nil {
-		panic(err)
+		return err
 	}
-	fmt.Println(formatResponse(res))
-	return nil
+	out, err = formatResponse(res)
+	fmt.Println(out)
+	return err
 }
 
 type responseStatus struct {
@@ -139,14 +128,14 @@ type response struct {
 	Status     responseStatus `json:"status"`
 }
 
-func formatResponse(res *response) string {
+func formatResponse(res *response) (string, error) {
 	err := defaults.Set(res)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 	jsonResponse, err := json.Marshal(res)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
-	return string(jsonResponse)
+	return string(jsonResponse), nil
 }

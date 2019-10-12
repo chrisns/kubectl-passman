@@ -3,52 +3,55 @@
 package main
 
 import (
-	"fmt"
+	"errors"
+	"log"
 
 	"github.com/keybase/go-keychain"
 )
 
 var defaultKeychain = func(serviceLabel string) ([]keychain.QueryResult, error) {
-	query := keychain.NewItem()
-	query.SetSecClass(keychain.SecClassGenericPassword)
-	query.SetService(serviceLabel)
+	query := getKeychain(serviceLabel)
 	query.SetReturnData(true)
 	return keychain.QueryItem(query)
 }
 
-func keychainFetcher(serviceLabel string) string {
-	results, err := defaultKeychain(serviceLabel)
-	if err != nil {
-		fmt.Println("err", err)
-		panic("unable to connect to keychain")
-	} else if len(results) != 1 {
-		panic("item doesn't exist")
-	}
-	password := string(results[0].Data)
-	return password
-}
-
-func keychainWriter(serviceLabel string, secret string) {
-	item := keychain.NewItem()
-	item.SetSecClass(keychain.SecClassGenericPassword)
-	item.SetService(serviceLabel)
-	item.SetAccount(serviceLabel)
-	item.SetData([]byte(secret))
-	err := keychain.AddItem(item)
-
-	if err == keychain.ErrorDuplicateItem {
-		keychainDeleter(serviceLabel)
-		keychainWriter(serviceLabel, secret)
-	}
-}
-
-func keychainDeleter(serviceLabel string) {
+func getKeychain(serviceLabel string) keychain.Item {
 	query := keychain.NewItem()
 	query.SetSecClass(keychain.SecClassGenericPassword)
 	query.SetService(serviceLabel)
-	query.SetMatchLimit(keychain.MatchLimitOne)
-	err := keychain.DeleteItem(query)
-	if err == keychain.ErrorDuplicateItem {
-		panic("errored deleting")
+	return query
+}
+
+func keychainFetcher(serviceLabel string) (string, error) {
+	results, err := defaultKeychain(serviceLabel)
+	if err != nil {
+		return "", errors.New("unable to connect to keychain")
+	} else if len(results) > 1 {
+		return "", errors.New("too many matching items")
+	} else if len(results) != 1 {
+		return "", errors.New("item doesn't exist")
 	}
+	return string(results[0].Data), nil
+}
+
+func keychainWriter(serviceLabel string, secret string) error {
+	query := getKeychain(serviceLabel)
+	query.SetData([]byte(secret))
+	err := keychain.AddItem(query)
+
+	if err == keychain.ErrorDuplicateItem {
+		log.Print("Item already exists, deleting it first")
+		err = keychainDeleter(serviceLabel)
+		if err != nil {
+			return err
+		}
+		return keychainWriter(serviceLabel, secret)
+	}
+	return err
+}
+
+func keychainDeleter(serviceLabel string) error {
+	query := getKeychain(serviceLabel)
+	query.SetMatchLimit(keychain.MatchLimitOne)
+	return keychain.DeleteItem(query)
 }

@@ -20,15 +20,17 @@ func Test_opgetter_happy(t *testing.T) {
 			},
 		}, nil
 	}
-	require.Contains(t, opgetter("gabriel"), expected)
+	actual, _ := opgetter("gabriel")
+	require.Contains(t, actual, expected)
 }
 
 func Test_opgetter_op_fail(t *testing.T) {
-	err := errors.New("test")
+	expected := errors.New("test")
 	defaultOpGet = func(itemName string) (*opResponse, error) {
-		return nil, err
+		return nil, expected
 	}
-	require.PanicsWithValue(t, err, func() { opgetter("mykubecreds") })
+	_, actual := opgetter("foo")
+	require.Equal(t, expected, actual)
 }
 
 func Test_opgetter_password_not_found(t *testing.T) {
@@ -37,11 +39,13 @@ func Test_opgetter_password_not_found(t *testing.T) {
 		return &opResponse{
 			Details: opResponseDetails{
 				Fields: []opResponseField{{
-					Name:  "notpassword",
-					Value: expected,
+					Name:        "notpassword",
+					Designation: "notpassword",
+					Value:       expected,
 				}},
 			},
 		}, nil
 	}
-	require.Panics(t, func() { opgetter("test") }) // TODO: panics with index out of range; is this expected behavior?
+	_, err := opgetter("test")
+	require.Equal(t, err.Error(), "Unable to find password")
 }

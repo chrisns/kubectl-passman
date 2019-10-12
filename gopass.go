@@ -33,12 +33,15 @@ var defaultGopassSet = func(itemName, secret string) error {
 		return err
 	}
 
-	gopassWriteSecret(stdin, secret)
+	err = gopassWriteSecret(stdin, secret)
+
+	if err != nil {
+		return err
+	}
 
 	out, err = cmd.CombinedOutput()
 
 	if err != nil {
-		log.Fatal(err)
 		return err
 	}
 	log.Print(string(out))

@@ -52,7 +52,6 @@ func cliHandler(c *cli.Context) error {
 		return write(handler, itemName, secret)
 	}
 	return read(handler, itemName)
-
 }
 
 func cliInfo() {
@@ -80,12 +79,13 @@ func main() {
 }
 
 func write(handler, itemName, secret string) error {
-	// TODO: validate secret is valid by marshalling it
-	if handler == "keychain" {
+	// TODO: validate secret is valid by marshaling it
+	switch handler {
+	case "keychain":
 		return keychainWriter(itemName, secret)
-	} else if handler == "1password" {
+	case "1password":
 		return opsetter(itemName, secret)
-	} else if handler == "gopass" {
+	case "gopass":
 		return gopassSetter(itemName, secret)
 	}
 	return nil
@@ -96,11 +96,12 @@ func read(handler, itemName string) error {
 	var err error
 	var out string
 
-	if handler == "keychain" {
+	switch handler {
+	case "keychain":
 		secret, err = keychainFetcher(itemName)
-	} else if handler == "1password" {
+	case "1password":
 		secret, err = opgetter(itemName)
-	} else if handler == "gopass" {
+	case "gopass":
 		secret, err = gopassGetter(itemName)
 	}
 

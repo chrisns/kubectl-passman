@@ -20,8 +20,9 @@ func Test_opgetter_happy(t *testing.T) {
 			},
 		}, nil
 	}
-	actual, _ := opgetter("gabriel")
+	actual, err := opgetter("gabriel")
 	require.Contains(t, actual, expected)
+	require.Nil(t, err)
 }
 
 func Test_opgetter_op_fail(t *testing.T) {
@@ -29,8 +30,9 @@ func Test_opgetter_op_fail(t *testing.T) {
 	defaultOpGet = func(itemName string) (*opResponse, error) {
 		return nil, expected
 	}
-	_, actual := opgetter("foo")
-	require.Equal(t, expected, actual)
+	actual, err := opgetter("foo")
+	require.Equal(t, actual, "")
+	require.Equal(t, expected, err)
 }
 
 func Test_opgetter_password_not_found(t *testing.T) {

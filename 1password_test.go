@@ -46,6 +46,7 @@ func Test_opgetter_password_not_found(t *testing.T) {
 			},
 		}, nil
 	}
-	_, err := opgetter("test")
+	actual, err := opgetter("test")
 	require.Equal(t, err.Error(), "unable to find password")
+	require.Equal(t, actual, "")
 }

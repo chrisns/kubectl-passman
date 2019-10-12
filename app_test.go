@@ -9,18 +9,21 @@ import (
 
 func Test_formatResponse(t *testing.T) {
 	fixture := `{"apiVersion":"client.authentication.k8s.io/v1beta1","kind":"ExecCredential","status":{"token":"my-bearer-token"}}`
-	actual, _ := formatResponse(&response{})
+	actual, err := formatResponse(&response{})
 	require.Equal(t, fixture, actual)
+	require.Nil(t, err)
 }
 
 func Test_formatResponse_is_json(t *testing.T) {
-	actual, _ := formatResponse(&response{})
+	actual, err := formatResponse(&response{})
 	require.True(t, json.Valid([]byte(actual)))
+	require.Nil(t, err)
 }
 
 func Test_formatResponse_populate_defaults(t *testing.T) {
-	actual, _ := formatResponse(&response{})
+	actual, err := formatResponse(&response{})
 	require.Contains(t, actual, "apiVersion")
+	require.Nil(t, err)
 }
 func Test_formatResponse_override_defaults(t *testing.T) {
 	actual, _ := formatResponse(&response{Kind: "foo"})

@@ -6,18 +6,12 @@ import (
 	"github.com/zalando/go-keyring"
 )
 
-func keychainFetcher(serviceLabel string) string {
-	secret, err := keyring.Get(serviceLabel, serviceLabel)
-	if err != nil {
-		panic(err)
-	}
-	return secret
+func keychainFetcher(serviceLabel string) (string, error) {
+	return keyring.Get(serviceLabel, serviceLabel)
 }
-func keychainWriter(serviceLabel, secret string) {
-	err := keyring.Set(serviceLabel, serviceLabel, secret)
-	if err != nil {
-		panic(err)
-	}
+
+func keychainWriter(serviceLabel, secret string) error {
+	return keyring.Set(serviceLabel, serviceLabel, secret)
 }
 
 // func keychainDeleter(serviceLabel string) {

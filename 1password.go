@@ -3,10 +3,9 @@ package main
 import (
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"log"
 	"os/exec"
-	"sort"
 )
 
 type opResponse struct {
@@ -38,18 +37,20 @@ var defaultOpGet = func(itemName string) (*opResponse, error) {
 	return &resp, nil
 }
 
-func opgetter(itemName string) string {
+func opgetter(itemName string) (string, error) {
 	resp, err := defaultOpGet(itemName)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
-	i := sort.Search(len(resp.Details.Fields), func(i int) bool {
-		return resp.Details.Fields[i].Designation == "password"
-	})
-	return resp.Details.Fields[i].Value
+	for _, v := range resp.Details.Fields {
+		if v.Designation == "password" {
+			return v.Value, nil
+		}
+	}
+	return "", errors.New("Unable to find password")
 }
 
-func opsetter(itemName, secret string) {
+func opsetter(itemName, secret string) error {
 	var res = &opResponseDetails{
 		Fields: []opResponseField{
 			{
@@ -63,15 +64,12 @@ func opsetter(itemName, secret string) {
 
 	jsonResponse, err := json.Marshal(res)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	stdoutStderr, err := exec.Command("op", "create", "item", "login",
 		base64.StdEncoding.EncodeToString(jsonResponse), "--title="+itemName).CombinedOutput()
 
 	fmt.Printf("%s\n", stdoutStderr)
-
-	if err != nil {
-		log.Fatal(err)
-	}
+	return err
 }

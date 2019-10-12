@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"os/exec"
@@ -12,33 +11,46 @@ var defaultGopassGet = func(itemName string) (string, error) {
 	return string(out), err
 }
 
-func gopassGetter(itemName string) string {
-	resp, err := defaultGopassGet(itemName)
-	if err != nil {
-		panic(err)
-	}
-	return resp
+func gopassGetter(itemName string) (string, error) {
+	return defaultGopassGet(itemName)
 }
 
-func gopassSetter(itemName, secret string) {
-	cmd := exec.Command("gopass", "insert", "--force", itemName)
-	stdin, err := cmd.StdinPipe()
+var gopassWriteCmd = func(itemName string) *exec.Cmd {
+	return exec.Command("gopass", "insert", "--force", itemName)
+}
+
+var defaultGopassSet = func(itemName, secret string) error {
+	var stdin io.WriteCloser
+	var err error
+	var out []byte
+
+	cmd := gopassWriteCmd(itemName)
+
+	stdin, err = cmd.StdinPipe()
+
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
 
-	go func() {
-		defer stdin.Close()
-		_, erro := io.WriteString(stdin, secret)
-		if erro != nil {
-			log.Fatal(err)
-		}
-	}()
+	gopassWriteSecret(stdin, secret)
 
-	out, err := cmd.CombinedOutput()
+	out, err = cmd.CombinedOutput()
+
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
+	log.Print(string(out))
+	return nil
+}
 
-	fmt.Printf("%s\n", out)
+var gopassWriteSecret = func(stdin io.WriteCloser, secret string) error {
+	defer stdin.Close()
+	_, err := io.WriteString(stdin, secret)
+	return err
+}
+
+func gopassSetter(itemName, secret string) error {
+	return defaultGopassSet(itemName, secret)
 }

@@ -79,7 +79,7 @@ func main() {
 }
 
 func write(handler, itemName, secret string) error {
-	// TODO: validate secret is valid by marshaling it
+	// FIX: validate secret is valid by marshaling it
 	switch handler {
 	case "keychain":
 		return keychainWriter(itemName, secret)

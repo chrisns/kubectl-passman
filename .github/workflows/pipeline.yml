@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
         if: github.event_name == 'push'
-      - run: echo $GITHUB_REF | sed -e 's/.*\///g' > VERSION
+      - run: echo $GITHUB_REF | sed -e 's/^refs\///g' -e 's/^tags\///g' > VERSION
       - uses: actions/upload-artifact@v1
         with:
           name: VERSION

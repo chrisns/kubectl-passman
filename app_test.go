@@ -26,8 +26,9 @@ func Test_formatResponse_populate_defaults(t *testing.T) {
 	require.Nil(t, err)
 }
 func Test_formatResponse_override_defaults(t *testing.T) {
-	actual, _ := formatResponse(&response{Kind: "foo"})
+	actual, err := formatResponse(&response{Kind: "foo"})
 	require.Contains(t, actual, `"kind":"foo"`)
+	require.Nil(t, err)
 }
 
 func Test_cli_info(t *testing.T) {

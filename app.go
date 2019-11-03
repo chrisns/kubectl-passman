@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -79,14 +80,31 @@ func main() {
 }
 
 func write(handler, itemName, secret string) error {
-	// FIX: validate secret is valid by marshaling it
+	var s *responseStatus = &responseStatus{}
+	var data []byte = []byte(secret)
+
+	err := json.Unmarshal(data, s)
+	if err != nil {
+		return err
+	}
+	if (len(s.ClientCertificateDataD) > 0) || (len(s.ClientKeyDataD) > 0) {
+		data, err = base64.StdEncoding.DecodeString(s.ClientCertificateDataD)
+		s.ClientCertificateData = string(data)
+		data, err = base64.StdEncoding.DecodeString(s.ClientKeyDataD)
+		s.ClientKeyData = string(data)
+		s.ClientCertificateDataD = ""
+		s.ClientKeyDataD = ""
+	}
+
+	secretByte, _ := json.Marshal(s)
+
 	switch handler {
 	case "keychain":
-		return keychainWriter(itemName, secret)
+		return keychainWriter(itemName, string(secretByte))
 	case "1password":
-		return opsetter(itemName, secret)
+		return opsetter(itemName, string(secretByte))
 	case "gopass":
-		return gopassSetter(itemName, secret)
+		return gopassSetter(itemName, string(secretByte))
 	}
 	return nil
 }
@@ -119,9 +137,11 @@ func read(handler, itemName string) error {
 }
 
 type responseStatus struct {
-	Token                 string `default:"my-bearer-token" json:"token,omitempty"`
-	ClientCertificateData string `json:"clientCertificateData,omitempty"`
-	ClientKeyData         string `json:"clientKeyData,omitempty"`
+	Token                  string `default:"my-bearer-token" json:"token,omitempty"`
+	ClientCertificateData  string `json:"clientCertificateData,omitempty"`
+	ClientCertificateDataD string `json:"client-certificate-data,omitempty"`
+	ClientKeyData          string `json:"clientKeyData,omitempty"`
+	ClientKeyDataD         string `json:"client-key-data,omitempty"`
 }
 type response struct {
 	APIVersion string         `default:"client.authentication.k8s.io/v1beta1" json:"apiVersion"`

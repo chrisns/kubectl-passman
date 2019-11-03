@@ -1,17 +1,17 @@
 # kubectl user password manager glue
 
-![CI status badge](https://github.com/chrisns/kubectl-passman/workflows/CI%20Pipeline/badge.svg) 
-![LICENSE](https://img.shields.io/github/license/chrisns/kubectl-passman) 
-![GitHub watchers](https://img.shields.io/github/watchers/chrisns/kubectl-passman?style) 
-![GitHub stars](https://img.shields.io/github/stars/chrisns/kubectl-passman) 
-![GitHub forks](https://img.shields.io/github/forks/chrisns/kubectl-passman) 
-![GitHub issues](https://img.shields.io/github/issues-raw/chrisns/kubectl-passman) 
-![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/chrisns/kubectl-passman) 
-![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/chrisns/kubectl-passman) 
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/chrisns/kubectl-passman) 
-![GitHub repo size](https://img.shields.io/github/repo-size/chrisns/kubectl-passman) 
+![CI status badge](https://github.com/chrisns/kubectl-passman/workflows/CI%20Pipeline/badge.svg)
+![LICENSE](https://img.shields.io/github/license/chrisns/kubectl-passman)
+![GitHub watchers](https://img.shields.io/github/watchers/chrisns/kubectl-passman?style)
+![GitHub stars](https://img.shields.io/github/stars/chrisns/kubectl-passman)
+![GitHub forks](https://img.shields.io/github/forks/chrisns/kubectl-passman)
+![GitHub issues](https://img.shields.io/github/issues-raw/chrisns/kubectl-passman)
+![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/chrisns/kubectl-passman)
+![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/chrisns/kubectl-passman)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/chrisns/kubectl-passman)
+![GitHub repo size](https://img.shields.io/github/repo-size/chrisns/kubectl-passman)
 ![GitHub contributors](https://img.shields.io/github/contributors/chrisns/kubectl-passman)
-![GitHub last commit](https://img.shields.io/github/last-commit/chrisns/kubectl-passman) 
+![GitHub last commit](https://img.shields.io/github/last-commit/chrisns/kubectl-passman)
 [![Go Report Card](https://goreportcard.com/badge/github.com/chrisns/kubectl-passman)](https://goreportcard.com/report/github.com/chrisns/kubectl-passman)
 
  > :heavy_exclamation_mark: An easy way to store your kubernetes credentials in a keychain or password manager
@@ -35,7 +35,7 @@ users:
 
 ## Works with (more coming)
 
-Provider | Supports | Example command 
+Provider | Supports | Example command
 --- | --- | ---
 keychain | [Mac OS Keychain](https://support.apple.com/en-gb/guide/keychain-access/kyca1083/mac) <br> [GNOME Keyring](https://wiki.gnome.org/Projects/GnomeKeyring) <br> [Windows Credential Manager](http://blogs.msdn.com/b/visualstudioalm/archive/2015/12/08/announcing-the-git-credential-manager-for-windows-1-0.aspx) | `kubectl passman keychain [item] [token]`
 1password | [1password](https://1password.com/) <br> requires [1password cli](https://1password.com/downloads/command-line/) | `kubectl passman 1password [item] [token]`
@@ -71,10 +71,19 @@ or for a key pair:
 }
 ```
 
+or for a key pair from your kube config:
+
+```json
+{
+  "client-certificate-data":"LS0tLS1CRU...LS0tCg==",
+  "lient-key-data":"LS0tLS1CRU...LS0tLS0K"
+}
+```
+
 If they are already in your kube config, you could retrieve them with something like:
 
 ```bash
-kubectl config view -o json | jq '.users[] | select(.name=="kubectl-prod-user") | .user' -c
+kubectl config view --raw -o json | jq '.users[] | select(.name=="kubectl-prod-user") | .user' -c
 ```
 
 ### Write it to the password manager
@@ -86,7 +95,8 @@ kubectl passman 1password kubectl-prod-user '[token]'
 
 ## so should look like:
 kubectl passman 1password kubectl-prod-user '{"token":"00000000-0000-0000-0000-000000000000"}'
-
+# or
+kubectl passman 1password kubectl-prod-user '{"client-certificate-data":"...BASE64_ENCODE...","client-key-data":"...BASE64_ENCODE..."}''
 ```
 
 Then add it to the `~/.kube/config`:
@@ -94,7 +104,7 @@ Then add it to the `~/.kube/config`:
 ```bash
 kubectl config set-credentials \
   kubectl-prod-user \
- --exec-api-version=client.authentication.k8s.io/v1beta \
+ --exec-api-version=client.authentication.k8s.io/v1beta1 \
  --exec-command=passman \
  --exec-arg=keychain \ # or 1password
  --exec-arg=kubectl-prod-user # name of [item-name] you used when you wrote to the password manager

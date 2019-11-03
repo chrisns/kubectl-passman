@@ -90,7 +90,7 @@ func write(handler, itemName, secret string) error {
 	if len(s.ClientCertificateDataD) > 0 || len(s.ClientKeyDataD) > 0 {
 		dataCrt, errCrt := base64.StdEncoding.DecodeString(s.ClientCertificateDataD)
 		dataKey, errKey := base64.StdEncoding.DecodeString(s.ClientKeyDataD)
-		if (errCrt == nil) && (errKey == nil) {
+		if errCrt == nil && errKey == nil {
 			s.ClientCertificateData = string(dataCrt)
 			s.ClientKeyData = string(dataKey)
 			s.ClientCertificateDataD = ""

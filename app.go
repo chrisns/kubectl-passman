@@ -80,20 +80,25 @@ func main() {
 }
 
 func write(handler, itemName, secret string) error {
-	var s *responseStatus = &responseStatus{}
-	var data []byte = []byte(secret)
+	s := &responseStatus{}
+	data := []byte(secret)
 
 	err := json.Unmarshal(data, s)
 	if err != nil {
 		return err
 	}
 	if (len(s.ClientCertificateDataD) > 0) || (len(s.ClientKeyDataD) > 0) {
-		data, err = base64.StdEncoding.DecodeString(s.ClientCertificateDataD)
-		s.ClientCertificateData = string(data)
-		data, err = base64.StdEncoding.DecodeString(s.ClientKeyDataD)
-		s.ClientKeyData = string(data)
-		s.ClientCertificateDataD = ""
-		s.ClientKeyDataD = ""
+		dataCrt, errCrt := base64.StdEncoding.DecodeString(s.ClientCertificateDataD)
+		dataKey, errKey := base64.StdEncoding.DecodeString(s.ClientKeyDataD)
+		if (errCrt == nil) && (errKey == nil) {
+			s.ClientCertificateData = string(dataCrt)
+			s.ClientKeyData = string(dataKey)
+			s.ClientCertificateDataD = ""
+			s.ClientKeyDataD = ""
+		} else {
+			s.ClientCertificateDataD = ""
+			s.ClientKeyDataD = ""
+		}
 	}
 
 	secretByte, _ := json.Marshal(s)

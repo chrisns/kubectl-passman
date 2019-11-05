@@ -171,7 +171,7 @@ func formatValidator(secret string) (string, error) {
 		s.ClientCertificateData = ""
 		s.ClientKeyData = ""
 	} else {
-		return "", errors.New("Cannot define valid secret format")
+		return "", errors.New("cannot define valid secret format")
 	}
 
 	secretByte, err := json.Marshal(s)

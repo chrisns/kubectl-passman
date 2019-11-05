@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -80,36 +81,19 @@ func main() {
 }
 
 func write(handler, itemName, secret string) error {
-	s := &responseStatus{}
-	data := []byte(secret)
 
-	err := json.Unmarshal(data, s)
+	validSecret, err := formatValidator(secret)
 	if err != nil {
 		return err
 	}
-	if len(s.ClientCertificateDataD) > 0 || len(s.ClientKeyDataD) > 0 {
-		dataCrt, errCrt := base64.StdEncoding.DecodeString(s.ClientCertificateDataD)
-		dataKey, errKey := base64.StdEncoding.DecodeString(s.ClientKeyDataD)
-		if errCrt == nil && errKey == nil {
-			s.ClientCertificateData = string(dataCrt)
-			s.ClientKeyData = string(dataKey)
-			s.ClientCertificateDataD = ""
-			s.ClientKeyDataD = ""
-		} else {
-			s.ClientCertificateDataD = ""
-			s.ClientKeyDataD = ""
-		}
-	}
-
-	secretByte, _ := json.Marshal(s)
 
 	switch handler {
 	case "keychain":
-		return keychainWriter(itemName, string(secretByte))
+		return keychainWriter(itemName, validSecret)
 	case "1password":
-		return opsetter(itemName, string(secretByte))
+		return opsetter(itemName, validSecret)
 	case "gopass":
-		return gopassSetter(itemName, string(secretByte))
+		return gopassSetter(itemName, validSecret)
 	}
 	return nil
 }
@@ -152,6 +136,49 @@ type response struct {
 	APIVersion string         `default:"client.authentication.k8s.io/v1beta1" json:"apiVersion"`
 	Kind       string         `default:"ExecCredential" json:"kind"`
 	Status     responseStatus `json:"status"`
+}
+
+func formatValidator(secret string) (string, error) {
+	s := &responseStatus{}
+	data := []byte(secret)
+
+	err := json.Unmarshal(data, s)
+	if err != nil {
+		return "", err
+	}
+
+	if len(s.ClientCertificateDataD) > 0 && len(s.ClientKeyDataD) > 0 {
+		dataCrt, errCrt := base64.StdEncoding.DecodeString(s.ClientCertificateDataD)
+		dataKey, errKey := base64.StdEncoding.DecodeString(s.ClientKeyDataD)
+		if errCrt == nil && errKey == nil {
+			s.ClientCertificateData = string(dataCrt)
+			s.ClientKeyData = string(dataKey)
+		} else if errCrt != nil {
+			return "", errCrt
+		} else if errKey != nil {
+			return "", errKey
+		}
+		s.ClientCertificateDataD = ""
+		s.ClientKeyDataD = ""
+		s.Token = ""
+	} else if len(s.ClientCertificateData) > 0 && len(s.ClientKeyData) > 0 {
+		s.ClientCertificateDataD = ""
+		s.ClientKeyDataD = ""
+		s.Token = ""
+	} else if len(s.Token) > 0 {
+		s.ClientCertificateDataD = ""
+		s.ClientKeyDataD = ""
+		s.ClientCertificateData = ""
+		s.ClientKeyData = ""
+	} else {
+		return "", errors.New("Cannot define valid secret format")
+	}
+
+	secretByte, err := json.Marshal(s)
+	if err != nil {
+		return "", err
+	}
+	return string(secretByte), nil
 }
 
 func formatResponse(res *response) (string, error) {

@@ -7,6 +7,54 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var (
+	jsonCertBase64 = `{"client-certificate-data":"MDAwMDA=","client-key-data":"MDAwMDA="}`
+	jsonCert       = `{"clientCertificateData":"00000","clientKeyData":"00000"}`
+	jsonToken      = `{"token":"00000"}`
+)
+
+func Test_formatValidatorCertBase64(t *testing.T) {
+	actual, err := formatValidator(jsonCertBase64)
+	require.Equal(t, jsonCert, actual)
+	require.Nil(t, err)
+}
+
+func Test_formatValidatorCertBase64ErrorDecode(t *testing.T) {
+	actual, err := formatValidator(`{"client-certificate-data":"BAD-DATA","client-key-data":"MDAwMDA="}`)
+	require.Equal(t, "", actual)
+	require.Equal(t, "illegal base64 data at input byte 3", err.Error())
+}
+
+func Test_formatValidatorCertBase64ErrorMisKey(t *testing.T) {
+	actual, err := formatValidator(`{"clientCertificateData":"BAD-DATA","client-certificate-data":"MDAwMDA="}`)
+	require.Equal(t, "", actual)
+	require.Equal(t, "Cannot define valid secret format", err.Error())
+}
+
+func Test_formatValidatorCertRaw(t *testing.T) {
+	actual, err := formatValidator(jsonCert)
+	require.Equal(t, jsonCert, actual)
+	require.Nil(t, err)
+}
+
+func Test_formatValidatorCertRawError(t *testing.T) {
+	actual, err := formatValidator(`{"clientCertificateData":"00000"}`)
+	require.Equal(t, "", actual)
+	require.Equal(t, "Cannot define valid secret format", err.Error())
+}
+
+func Test_formatValidatorCertRawErrorMisKey(t *testing.T) {
+	actual, err := formatValidator(`{"clientCertificateData":"00000"}`)
+	require.Equal(t, "", actual)
+	require.Equal(t, "Cannot define valid secret format", err.Error())
+}
+
+func Test_formatValidatorToken(t *testing.T) {
+	actual, err := formatValidator(jsonToken)
+	require.Equal(t, jsonToken, actual)
+	require.Nil(t, err)
+}
+
 func Test_formatResponse(t *testing.T) {
 	fixture := `{"apiVersion":"client.authentication.k8s.io/v1beta1","kind":"ExecCredential","status":{"token":"my-bearer-token"}}`
 	actual, err := formatResponse(&response{})

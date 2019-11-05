@@ -28,7 +28,7 @@ func Test_formatValidatorCertBase64ErrorDecode(t *testing.T) {
 func Test_formatValidatorCertBase64ErrorMisKey(t *testing.T) {
 	actual, err := formatValidator(`{"clientCertificateData":"BAD-DATA","client-certificate-data":"MDAwMDA="}`)
 	require.Equal(t, "", actual)
-	require.Equal(t, "Cannot define valid secret format", err.Error())
+	require.Equal(t, "cannot define valid secret format", err.Error())
 }
 
 func Test_formatValidatorCertRaw(t *testing.T) {
@@ -40,13 +40,13 @@ func Test_formatValidatorCertRaw(t *testing.T) {
 func Test_formatValidatorCertRawError(t *testing.T) {
 	actual, err := formatValidator(`{"clientCertificateData":"00000"}`)
 	require.Equal(t, "", actual)
-	require.Equal(t, "Cannot define valid secret format", err.Error())
+	require.Equal(t, "cannot define valid secret format", err.Error())
 }
 
 func Test_formatValidatorCertRawErrorMisKey(t *testing.T) {
 	actual, err := formatValidator(`{"clientCertificateData":"00000"}`)
 	require.Equal(t, "", actual)
-	require.Equal(t, "Cannot define valid secret format", err.Error())
+	require.Equal(t, "cannot define valid secret format", err.Error())
 }
 
 func Test_formatValidatorToken(t *testing.T) {

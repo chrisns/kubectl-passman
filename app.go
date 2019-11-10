@@ -153,13 +153,13 @@ func formatValidator(secret string) (string, error) {
 		dataKey, errKey := base64.StdEncoding.DecodeString(s.ClientKeyDataD)
 
 		switch {
-		case errCrt == nil && errKey == nil:
-			s.ClientCertificateData = string(dataCrt)
-			s.ClientKeyData = string(dataKey)
 		case errCrt != nil:
 			return "", errCrt
 		case errKey != nil:
 			return "", errKey
+		default:
+			s.ClientCertificateData = string(dataCrt)
+			s.ClientKeyData = string(dataKey)
 		}
 
 		s.ClientCertificateDataD = ""

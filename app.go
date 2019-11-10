@@ -147,30 +147,34 @@ func formatValidator(secret string) (string, error) {
 		return "", err
 	}
 
-	if len(s.ClientCertificateDataD) > 0 && len(s.ClientKeyDataD) > 0 {
+	switch {
+	case len(s.ClientCertificateDataD) > 0 && len(s.ClientKeyDataD) > 0:
 		dataCrt, errCrt := base64.StdEncoding.DecodeString(s.ClientCertificateDataD)
 		dataKey, errKey := base64.StdEncoding.DecodeString(s.ClientKeyDataD)
-		if errCrt == nil && errKey == nil {
+
+		switch {
+		case errCrt == nil && errKey == nil:
 			s.ClientCertificateData = string(dataCrt)
 			s.ClientKeyData = string(dataKey)
-		} else if errCrt != nil {
+		case errCrt != nil:
 			return "", errCrt
-		} else if errKey != nil {
+		case errKey != nil:
 			return "", errKey
 		}
+
 		s.ClientCertificateDataD = ""
 		s.ClientKeyDataD = ""
 		s.Token = ""
-	} else if len(s.ClientCertificateData) > 0 && len(s.ClientKeyData) > 0 {
+	case len(s.ClientCertificateData) > 0 && len(s.ClientKeyData) > 0:
 		s.ClientCertificateDataD = ""
 		s.ClientKeyDataD = ""
 		s.Token = ""
-	} else if len(s.Token) > 0 {
+	case len(s.Token) > 0:
 		s.ClientCertificateDataD = ""
 		s.ClientKeyDataD = ""
 		s.ClientCertificateData = ""
 		s.ClientKeyData = ""
-	} else {
+	default:
 		return "", errors.New("cannot define valid secret format")
 	}
 
@@ -178,6 +182,7 @@ func formatValidator(secret string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	return string(secretByte), nil
 }
 

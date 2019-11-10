@@ -11,7 +11,7 @@ linters-settings:
 
     enable-all: false
   gocyclo:
-    min-complexity: 10
+    min-complexity: 12
   maligned:
     suggest-new: true
   depguard:

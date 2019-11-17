@@ -15,6 +15,8 @@ spec:
       files:
         - from: kubectl-passman-darwin-amd64
           to: kubectl-passman
+        - from: LICENSE
+          to: .
 
     - selector:
         matchLabels:
@@ -26,6 +28,8 @@ spec:
       files:
         - from: kubectl-passman-darwin-386
           to: kubectl-passman
+        - from: LICENSE
+          to: .
 
     - selector:
         matchLabels:
@@ -37,6 +41,8 @@ spec:
       files:
         - from: kubectl-passman-linux-arm
           to: kubectl-passman
+        - from: LICENSE
+          to: .
 
     - selector:
         matchLabels:
@@ -48,6 +54,8 @@ spec:
       files:
         - from: kubectl-passman-linux-386
           to: kubectl-passman
+        - from: LICENSE
+          to: .
 
     - selector:
         matchLabels:
@@ -59,6 +67,8 @@ spec:
       files:
         - from: kubectl-passman-linux-amd64
           to: kubectl-passman
+        - from: LICENSE
+          to: .
 
     - selector:
         matchLabels:
@@ -70,6 +80,8 @@ spec:
       files:
         - from: kubectl-passman-windows-amd64.exe
           to: kubectl-passman.exe
+        - from: LICENSE
+          to: .
 
     - selector:
         matchLabels:
@@ -81,6 +93,8 @@ spec:
       files:
         - from: kubectl-passman-windows-386.exe
           to: kubectl-passman.exe
+        - from: LICENSE
+          to: .
 
   shortDescription: Store kubeconfig credentials in keychains or password managers
   homepage: https://github.com/chrisns/kubectl-passman

@@ -121,7 +121,7 @@ jobs:
       - uses: actions/download-artifact@v1
         with:
           name: VERSION
-      - run: zip kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip ${BUILD_FILENAME}
+      - run: zip kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip ${BUILD_FILENAME} LICENSE
       - name: fetch hub
         if: github.event_name == 'push'
         run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz

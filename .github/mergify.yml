@@ -31,18 +31,8 @@ pull_request_rules:
       review:
         message: auto approve repomanager
 
-  - name: assign failing to owner
+  - name: assign to owner
     conditions:
-      - check-failure=build
-    actions:
-      assign:
-        users:
-          - chrisns
-
-  - name: assign non dependabot to owner
-    conditions:
-      - author!=dependabot[bot]
-      - author!=the-repository-manager[bot]
     actions:
       assign:
         users:

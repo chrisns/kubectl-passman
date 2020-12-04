@@ -33,6 +33,7 @@ pull_request_rules:
 
   - name: assign to owner
     conditions:
+      - base=master
     actions:
       assign:
         users:

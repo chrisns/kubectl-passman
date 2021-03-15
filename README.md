@@ -31,7 +31,7 @@ users:
     client-key-data: <REAL PRIVATE KEY!>
 ```
 
-## :scream: :scream: :scream: :scream:<br/><br/>Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.doc` on their desktop? <br/><br/> Then you need kubectl-passman!
+## :scream: :scream: :scream: :scream:<br/><br/>Do you scold your parents :man_teacher:/:woman_teacher: for maintaining a `passwords.txt` on their desktop? <br/><br/> Then you need kubectl-passman!
 
 ## Works with (more coming)
 

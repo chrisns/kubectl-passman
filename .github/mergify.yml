@@ -1,7 +1,6 @@
 pull_request_rules:
   - name: automatic merge dependabot
     conditions:
-      - base=master
       - author=dependabot[bot]
     actions:
       merge:
@@ -13,11 +12,10 @@ pull_request_rules:
       - author=dependabot[bot]
     actions:
       review:
-        message: auto approve dependabot
+        type: APPROVE
 
   - name: automatic merge repomanager
     conditions:
-      - base=master
       - author=the-repository-manager[bot]
     actions:
       merge:
@@ -33,7 +31,7 @@ pull_request_rules:
 
   - name: assign to owner
     conditions:
-      - base=master
+      - check-failure>1
     actions:
       assign:
         users:

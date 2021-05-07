@@ -21,7 +21,7 @@ jobs:
     env:
       HUB_OS: linux
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         if: github.event_name == 'push'
       - run: echo $GITHUB_REF | sed -e 's/^refs\///g' -e 's/^tags\///g' > VERSION
       - uses: actions/upload-artifact@v1
@@ -41,7 +41,7 @@ jobs:
     name: Secret check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
       - uses: docker://zricethezav/gitleaks
         with:
           args: -v --exclude-forks --repo-path=. --repo-config
@@ -50,7 +50,7 @@ jobs:
   #   name: GolangCI
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v1
+  #     - uses: actions/checkout@v2.3.4
   #     - uses: docker://golangci/golangci-lint
   #       with:
   #         args: golangci-lint run --color=always
@@ -101,7 +101,7 @@ jobs:
       BUILD_FILENAME: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
       ZIP_FILENAME: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
       - run: go test -v
       - uses: actions/download-artifact@v1
         with:
@@ -141,7 +141,7 @@ jobs:
     needs:
       - test-build-publish
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
       - run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
       - uses: actions/download-artifact@v1
         with:

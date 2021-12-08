@@ -103,7 +103,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.5
       - run: go test -v
-      - uses: actions/download-artifact@v2.0.10
+      - uses: actions/download-artifact@v2.1.0
         with:
           name: VERSION
       - run: go build -a -ldflags "-X main.VERSION=$(cat VERSION/VERSION)" -o ${BUILD_FILENAME}
@@ -118,7 +118,7 @@ jobs:
         with:
           name: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
           path: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
-      - uses: actions/download-artifact@v2.0.10
+      - uses: actions/download-artifact@v2.1.0
         with:
           name: VERSION
       - run: zip kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip ${BUILD_FILENAME} LICENSE
@@ -143,7 +143,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.5
       - run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
-      - uses: actions/download-artifact@v2.0.10
+      - uses: actions/download-artifact@v2.1.0
         with:
           name: VERSION
       - run: hub-linux-amd64-2.12.7/bin/hub release download "$(cat VERSION/VERSION)"

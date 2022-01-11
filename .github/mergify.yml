@@ -6,10 +6,3 @@ pull_request_rules:
       merge:
         method: rebase
         rebase_fallback: squash
-  - name: assign to owner
-    conditions:
-      - check-failure>1
-    actions:
-      assign:
-        users:
-          - chrisns

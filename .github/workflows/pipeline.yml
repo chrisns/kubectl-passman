@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
         if: github.event_name == 'push'
       - run: echo $GITHUB_REF | sed -e 's/^refs\///g' -e 's/^tags\///g' > VERSION
-      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # renovate: tag=v2.2.4
+      - uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # renovate: tag=v2.3.1
         with:
           name: VERSION
           path: VERSION
@@ -114,7 +114,7 @@ jobs:
         env:
           GOOS: ${{matrix.OS}}
           GOARCH: ${{matrix.ARCH}}
-      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # renovate: tag=v2.2.4
+      - uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # renovate: tag=v2.3.1
         with:
           name: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
           path: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
@@ -157,7 +157,7 @@ jobs:
           VERSION=$(cat VERSION/VERSION) $(go env GOPATH)/bin/sprig-cli -tmpl krew/krew.tpl -data krew/shas.yaml > passman.yaml
       - name: show krew manifest
         run: cat passman.yaml
-      - uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # renovate: tag=v2.2.4
+      - uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # renovate: tag=v2.3.1
         with:
           name: passman.yaml
           path: passman.yaml

@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "config:base",
+    "workarounds:typesNodeVersioning"
+  ],
+  "automerge": true,
+  "platformAutomerge": true,
+  "lockFileMaintenance": { "enabled": true },
+  "pinDigests": true,
+  "dependencyDashboard": false,
+  "rollbackPrs": true,
+  "assignees": ["chrisns"]
+ }

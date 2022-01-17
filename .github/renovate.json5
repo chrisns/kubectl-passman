@@ -9,5 +9,10 @@
   "pinDigests": true,
   "dependencyDashboard": false,
   "rollbackPrs": true,
-  "assignees": ["chrisns"]
+  "assignees": ["chrisns"],
+  "github-actions": {
+    "ignorePaths": [
+      "\\.github/workflows/security.yml"
+    ]
+  },
  }

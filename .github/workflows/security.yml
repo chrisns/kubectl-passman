@@ -14,15 +14,15 @@ jobs:
       with:
         fetch-depth: 2
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@cd783c8a29bdcf5a5c79c5137889e24651fa626c # renovate: tag=v1.0.27
+      uses: github/codeql-action/init@384cfc42b2131df01c009d3d2eed7b78d8e8556e # renovate: tag=v1.0.27
       continue-on-error: true
       id: initcodeql
     - name: Autobuild
       if: steps.initcodeql.outcome == 'success'
-      uses: github/codeql-action/autobuild@cd783c8a29bdcf5a5c79c5137889e24651fa626c # renovate: tag=v1.0.27
+      uses: github/codeql-action/autobuild@384cfc42b2131df01c009d3d2eed7b78d8e8556e # renovate: tag=v1.0.27
     - name: Perform CodeQL Analysis
       if: steps.initcodeql.outcome == 'success'
-      uses: github/codeql-action/analyze@cd783c8a29bdcf5a5c79c5137889e24651fa626c # renovate: tag=v1.0.27
+      uses: github/codeql-action/analyze@384cfc42b2131df01c009d3d2eed7b78d8e8556e # renovate: tag=v1.0.27
 
   ShiftLeft:
     runs-on: ubuntu-latest
@@ -37,6 +37,6 @@ jobs:
       with:
         output: reports
     - name: Upload report
-      uses: github/codeql-action/upload-sarif@cd783c8a29bdcf5a5c79c5137889e24651fa626c # renovate: tag=v1.0.27
+      uses: github/codeql-action/upload-sarif@384cfc42b2131df01c009d3d2eed7b78d8e8556e # renovate: tag=v1.0.27
       with:
         sarif_file: reports

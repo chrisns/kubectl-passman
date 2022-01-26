@@ -5,38 +5,6 @@ on:
   pull_request:
     branches: [main, master]
 jobs:
-  CodeQL:
-    name: CodeQL
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
-      with:
-        fetch-depth: 2
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@cd783c8a29bdcf5a5c79c5137889e24651fa626c # renovate: tag=v1.0.27
-      continue-on-error: true
-      id: initcodeql
-    - name: Autobuild
-      if: steps.initcodeql.outcome == 'success'
-      uses: github/codeql-action/autobuild@cd783c8a29bdcf5a5c79c5137889e24651fa626c # renovate: tag=v1.0.27
-    - name: Perform CodeQL Analysis
-      if: steps.initcodeql.outcome == 'success'
-      uses: github/codeql-action/analyze@cd783c8a29bdcf5a5c79c5137889e24651fa626c # renovate: tag=v1.0.27
-
-  ShiftLeft:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2.4.0
-    - name: Perform ShiftLeft Scan
-      uses: ShiftLeftSecurity/scan-action@master
-      env:
-        WORKSPACE: ""
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SCAN_AUTO_BUILD: true
-      with:
-        output: reports
-    - name: Upload report
-      uses: github/codeql-action/upload-sarif@cd783c8a29bdcf5a5c79c5137889e24651fa626c # renovate: tag=v1.0.27
-      with:
-        sarif_file: reports
+  scan:
+    name: Security Scan
+    uses: chrisns/repo-config/.github/workflows/security-scan.yml@main

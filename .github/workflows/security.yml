@@ -7,4 +7,4 @@ on:
 jobs:
   scan:
     name: Security Scan
-    uses: chrisns/repo-config/.github/workflows/security-scan.yml@main
+    uses: chrisns/.github/.github/workflows/security-scan.yml@main

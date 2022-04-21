@@ -21,7 +21,7 @@ jobs:
     env:
       HUB_OS: linux
     steps:
-      - uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3.0.0
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
         if: github.event_name == 'push'
       - run: echo $GITHUB_REF | sed -e 's/^refs\///g' -e 's/^tags\///g' > VERSION
       - uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # tag=v3.0.0
@@ -92,7 +92,7 @@ jobs:
       BUILD_FILENAME: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
       ZIP_FILENAME: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip
     steps:
-      - uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3.0.0
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
       - run: go test -v
       - uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # tag=v3.0.0
         with:
@@ -132,7 +132,7 @@ jobs:
     needs:
       - test-build-publish
     steps:
-      - uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3.0.0
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
       - run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
       - uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # tag=v3.0.0
         with:

@@ -97,6 +97,7 @@ jobs:
       - uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # tag=v3.0.0
         with:
           name: VERSION
+          path: VERSION
       - run: go build -a -ldflags "-X main.VERSION=$(cat VERSION/VERSION)" -o ${BUILD_FILENAME}
         env:
           GOOS: ${{matrix.OS}}
@@ -112,6 +113,7 @@ jobs:
       - uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # tag=v3.0.0
         with:
           name: VERSION
+          path: VERSION
       - run: zip kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip ${BUILD_FILENAME} LICENSE
       - name: fetch hub
         if: github.event_name == 'push'
@@ -137,6 +139,7 @@ jobs:
       - uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # tag=v3.0.0
         with:
           name: VERSION
+          path: VERSION
       - run: hub-linux-amd64-2.12.7/bin/hub release download "$(cat VERSION/VERSION)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -73,8 +73,6 @@ jobs:
             EXT: .exe
         exclude:
           - OS: darwin
-            ARCH: arm64
-          - OS: darwin
             ARCH: arm
           - OS: windows
             ARCH: arm64

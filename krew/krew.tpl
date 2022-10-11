@@ -21,6 +21,19 @@ spec:
     - selector:
         matchLabels:
           os: darwin
+          arch: arm64
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-darwin-arm64.zip
+      sha256: "{{.kubectl_passman_darwin_arm64}}"
+      bin: "./kubectl-passman"
+      files:
+        - from: kubectl-passman-darwin-arm64
+          to: kubectl-passman
+        - from: LICENSE
+          to: .
+
+    - selector:
+        matchLabels:
+          os: darwin
           arch: 386
       uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-darwin-386.zip
       sha256: "{{.kubectl_passman_darwin_386}}"
@@ -40,6 +53,19 @@ spec:
       bin: "./kubectl-passman"
       files:
         - from: kubectl-passman-linux-arm
+          to: kubectl-passman
+        - from: LICENSE
+          to: .
+
+    - selector:
+        matchLabels:
+          os: linux
+          arch: arm64
+      uri: https://github.com/chrisns/kubectl-passman/releases/download/{{env "VERSION"}}/kubectl-passman-linux-arm64.zip
+      sha256: "{{.kubectl_passman_linux_arm64}}"
+      bin: "./kubectl-passman"
+      files:
+        - from: kubectl-passman-linux-arm64
           to: kubectl-passman
         - from: LICENSE
           to: .

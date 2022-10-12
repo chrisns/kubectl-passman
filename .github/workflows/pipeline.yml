@@ -136,4 +136,4 @@ jobs:
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
       - name: Update new version in krew-index
-        uses: rajatjindal/krew-release-bot@v0.0.43
+        uses: rajatjindal/krew-release-bot@92da038bbf995803124a8e50ebd438b2f37bbbb0 # tag=v0.0.43

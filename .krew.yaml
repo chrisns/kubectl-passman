@@ -104,7 +104,6 @@ spec:
 
 
   shortDescription: Store kubeconfig credentials in keychains or password managers
-  homepage: https://github.com/chrisns/kubectl-passman
   caveats: |
     This plugin needs a usable keychain or password manager
     See usage docs https://github.com/chrisns/kubectl-passman

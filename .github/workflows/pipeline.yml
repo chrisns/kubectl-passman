@@ -135,27 +135,5 @@ jobs:
       - test-build-publish
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
-      - run: wget -q -c https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}.tgz -O - | tar -xz
-      - uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741 # tag=v3.0.0
-        with:
-          name: VERSION
-          path: VERSION
-      - run: hub-linux-amd64-2.12.7/bin/hub release download "$(cat VERSION/VERSION)"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: krew/generate-shas.sh > krew/shas.yaml
-      - run: krew/generate-shas.sh > krew/shas.yaml
-      - name: template krew manifest
-        run: |
-          go get github.com/yngveh/sprig-cli
-          VERSION=$(cat VERSION/VERSION) $(go env GOPATH)/bin/sprig-cli -tmpl krew/krew.tpl -data krew/shas.yaml > passman.yaml
-      - name: show krew manifest
-        run: cat passman.yaml
-      - uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # tag=v3.1.0
-        with:
-          name: passman.yaml
-          path: passman.yaml
-      - name: Publish krew manifest to release
-        run: hub-${HUB_OS}-${HUB_ARCH}-${HUB_VERSION}/bin/hub release edit -a passman.yaml -m "Latest build of ${{github.ref}}" "$(cat VERSION/VERSION)"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update new version in krew-index
+        uses: rajatjindal/krew-release-bot@v0.0.43

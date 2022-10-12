@@ -32,18 +32,6 @@ spec:
 
   - selector:
       matchLabels:
-        os: darwin
-        arch: 386
-    {{addURIAndSha "https://github.com/chrisns/kubectl-passman/releases/download/{{ .TagName }}/kubectl-passman-darwin-386.zip" .TagName }}
-    bin: "./kubectl-passman"
-    files:
-      - from: kubectl-passman-darwin-386
-        to: kubectl-passman
-      - from: LICENSE
-        to: .
-
-  - selector:
-      matchLabels:
         os: linux
         arch: arm
     {{addURIAndSha "https://github.com/chrisns/kubectl-passman/releases/download/{{ .TagName }}/kubectl-passman-linux-arm.zip" .TagName }}

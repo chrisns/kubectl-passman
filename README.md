@@ -76,7 +76,7 @@ or for a key pair from your kube config:
 ```json
 {
   "client-certificate-data":"LS0tLS1CRU...LS0tCg==",
-  "lient-key-data":"LS0tLS1CRU...LS0tLS0K"
+  "client-key-data":"LS0tLS1CRU...LS0tLS0K"
 }
 ```
 
@@ -96,7 +96,7 @@ kubectl passman 1password kubectl-prod-user '[token]'
 ## so should look like:
 kubectl passman 1password kubectl-prod-user '{"token":"00000000-0000-0000-0000-000000000000"}'
 # or
-kubectl passman 1password kubectl-prod-user '{"client-certificate-data":"...BASE64_ENCODE...","client-key-data":"...BASE64_ENCODE..."}''
+kubectl passman 1password kubectl-prod-user '{"client-certificate-data":"...BASE64_ENCODE...","client-key-data":"...BASE64_ENCODE..."}'
 ```
 
 Then add it to the `~/.kube/config`:

@@ -128,7 +128,7 @@ jobs:
   write-krew:
     name: Write krew manifest file
     runs-on: ubuntu-latest
-    if: github.tag != ''
+    if: github.ref_type == 'tag'
     env:
       HUB_OS: linux
     needs:

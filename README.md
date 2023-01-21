@@ -105,7 +105,7 @@ Then add it to the `~/.kube/config`:
 kubectl config set-credentials \
   kubectl-prod-user \
  --exec-api-version=client.authentication.k8s.io/v1beta1 \
- --exec-command=passman \
+ --exec-command=kubectl-passman \
  --exec-arg=keychain \ # or 1password
  --exec-arg=kubectl-prod-user # name of [item-name] you used when you wrote to the password manager
 ```

@@ -21,7 +21,7 @@ jobs:
     env:
       HUB_OS: linux
     steps:
-      - uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247 # v3.5.1
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         if: github.event_name == 'push'
       - run: echo $GITHUB_REF | sed -e 's/^refs\///g' -e 's/^tags\///g' > VERSION
       - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
@@ -92,7 +92,7 @@ jobs:
       BUILD_FILENAME: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
       ZIP_FILENAME: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}.zip
     steps:
-      - uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247 # v3.5.1
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - run: go test -v
       - uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
         with:
@@ -134,6 +134,6 @@ jobs:
     needs:
       - test-build-publish
     steps:
-      - uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247 # v3.5.1
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - name: Update new version in krew-index
         uses: rajatjindal/krew-release-bot@df3eb197549e3568be8b4767eec31c5e8e8e6ad8 # v0.0.46

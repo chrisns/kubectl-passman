@@ -5,4 +5,3 @@ pull_request_rules:
     actions:
       merge:
         method: rebase
-        rebase_fallback: squash

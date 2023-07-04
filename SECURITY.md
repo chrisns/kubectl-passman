@@ -2,4 +2,4 @@
 
 ## Reporting a Vulnerability
 
-Please contact chris@cns.me.uk [pgp/gpg key](https://github.com/chrisns.gpg)
+Please contact [chris@cns.me.uk](mailto:chris@cns.me.uk) [pgp/gpg key](https://github.com/chrisns.gpg)

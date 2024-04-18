@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         if: github.event_name == 'push'
       - run: echo $GITHUB_REF | sed -e 's/^refs\///g' -e 's/^tags\///g' > VERSION
-      - uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+      - uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4.3.2
         with:
           name: VERSION
           path: VERSION
@@ -106,7 +106,7 @@ jobs:
         env:
           GOOS: ${{matrix.OS}}
           GOARCH: ${{matrix.ARCH}}
-      - uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+      - uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4.3.2
         with:
           name: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
           path: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}

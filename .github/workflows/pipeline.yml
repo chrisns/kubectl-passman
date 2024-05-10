@@ -76,6 +76,8 @@ jobs:
             ARCH: 386
           - OS: darwin
             ARCH: arm
+          - OS: darwin
+            ARCH: amd64
           - OS: windows
             ARCH: arm64
           - OS: freebsd

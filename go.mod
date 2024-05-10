@@ -1,6 +1,6 @@
 module github.com/chrisns/kubectl-passman
 
-go 1.12
+go 1.22.3
 
 require github.com/stretchr/testify v1.9.0
 

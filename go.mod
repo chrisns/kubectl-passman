@@ -7,13 +7,13 @@ require github.com/stretchr/testify v1.9.0
 require (
 	github.com/creasty/defaults v1.8.0
 	github.com/keybase/go-keychain v0.0.0-20231219164618-57a3676c3af6
-	github.com/urfave/cli v1.22.15
+	github.com/urfave/cli v1.22.16
 	github.com/zalando/go-keyring v0.2.5
 )
 
 require (
 	github.com/alessio/shellescape v1.4.2 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
 	github.com/danieljoos/wincred v1.2.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect

@@ -126,7 +126,7 @@ func read(handler, itemName string) error {
 }
 
 type responseStatus struct {
-	Token                  string `default:"my-bearer-token" json:"token,omitempty"`
+	Token                  string `json:"token,omitempty"`
 	ClientCertificateData  string `json:"clientCertificateData,omitempty"`
 	ClientCertificateDataD string `json:"client-certificate-data,omitempty"`
 	ClientKeyData          string `json:"clientKeyData,omitempty"`

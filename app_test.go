@@ -56,7 +56,7 @@ func Test_formatValidatorToken(t *testing.T) {
 }
 
 func Test_formatResponse(t *testing.T) {
-	fixture := `{"apiVersion":"client.authentication.k8s.io/v1beta1","kind":"ExecCredential","status":{"token":"my-bearer-token"}}`
+	fixture := `{"apiVersion":"client.authentication.k8s.io/v1beta1","kind":"ExecCredential","status":{}}`
 	actual, err := formatResponse(&response{})
 	require.Equal(t, fixture, actual)
 	require.Nil(t, err)

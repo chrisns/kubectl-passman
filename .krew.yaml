@@ -5,17 +5,6 @@ metadata:
 spec:
   version: {{ .TagName }}
   platforms:
-  - selector:
-      matchLabels:
-        os: darwin
-        arch: amd64
-    {{addURIAndSha "https://github.com/chrisns/kubectl-passman/releases/download/{{ .TagName }}/kubectl-passman-darwin-amd64.zip" .TagName }}
-    bin: "./kubectl-passman"
-    files:
-      - from: kubectl-passman-darwin-amd64
-        to: kubectl-passman
-      - from: LICENSE
-        to: .
 
   - selector:
       matchLabels:

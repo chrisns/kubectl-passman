@@ -99,7 +99,7 @@ jobs:
         with:
           go-version-file: './go.mod'
       - run: go test -v
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: VERSION
           path: VERSION
@@ -115,7 +115,7 @@ jobs:
         with:
           name: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
           path: kubectl-passman-${{matrix.OS}}-${{matrix.ARCH}}${{matrix.EXT}}
-      - uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4.2.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: VERSION
           path: VERSION

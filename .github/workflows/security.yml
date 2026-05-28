@@ -11,3 +11,5 @@ jobs:
     permissions:
       security-events: write
       statuses: write
+      contents: read
+      actions: read

@@ -1,6 +1,6 @@
 module github.com/chrisns/kubectl-passman
 
-go 1.22.3
+go 1.25.0
 
 require github.com/stretchr/testify v1.11.1
 
@@ -8,13 +8,10 @@ require (
 	github.com/creasty/defaults v1.8.0
 	github.com/keybase/go-keychain v0.0.0-20231219164618-57a3676c3af6
 	github.com/urfave/cli v1.22.17
-	github.com/urfave/cli/v3 v3.8.0
 	github.com/zalando/go-keyring v0.2.8
 )
 
 require (
-	al.essio.dev/pkg/shellescape v1.5.1 // indirect
-	github.com/alessio/shellescape v1.4.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/danieljoos/wincred v1.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

@@ -2,7 +2,7 @@ module github.com/chrisns/kubectl-passman
 
 go 1.25.0
 
-require github.com/stretchr/testify v1.11.1
+require github.com/stretchr/testify v1.12.0
 
 require (
 	github.com/creasty/defaults v1.8.0

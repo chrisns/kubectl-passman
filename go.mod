@@ -2,7 +2,7 @@ module github.com/chrisns/kubectl-passman
 
 go 1.25.0
 
-require github.com/stretchr/testify v1.12.0
+require github.com/stretchr/testify v1.12.1
 
 require (
 	github.com/creasty/defaults v1.8.0
@@ -18,6 +18,7 @@ require (
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/sys v0.27.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

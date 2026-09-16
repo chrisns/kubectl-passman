@@ -120,3 +120,7 @@ go build
 ## Contributing
 
 I :heart: contributions, it'd be great if you could add support for your favourite password manager, work on something from the [TODO](#TODO) or any open issues as a priority, but anything else that takes your fancy too is great, though best to raise an issue to discuss before investing time into it.
+
+## Thanks
+
+<a href="https://www.atlascloud.ai/"><img src="https://www.atlascloud.ai/logo.svg" alt="Atlas Cloud" height="20"></a> sponsors the cloud infrastructure for this project.

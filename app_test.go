@@ -128,3 +128,28 @@ func Test_promoteIDToken(t *testing.T) {
 	require.Equal(t, "x", s.Token)
 	require.Equal(t, "", s.IDToken)
 }
+
+func Test_plainTokenToJSONLeavesNonTokensAlone(t *testing.T) {
+	for _, in := range []string{`"abc"`, `["a"]`, `[1,2]`, "tok\nen", "a\tb"} {
+		require.Equal(t, in, plainTokenToJSON(in))
+		_, err := formatValidator(in)
+		require.NotNil(t, err, in)
+	}
+}
+
+func Test_plainTokenToJSONCRLF(t *testing.T) {
+	require.Equal(t, `{"token":"abc"}`, plainTokenToJSON("abc\r\n"))
+}
+
+func Test_promoteIDTokenIgnoredWithCert(t *testing.T) {
+	s := &responseStatus{IDToken: "x", ClientCertificateData: "c", ClientKeyData: "k"}
+	s.promoteIDToken()
+	require.Equal(t, "", s.Token)
+	require.Equal(t, "", s.IDToken)
+}
+
+func Test_formatValidatorCertsUnchangedByWrapper(t *testing.T) {
+	actual, err := formatValidator(jsonCert)
+	require.Nil(t, err)
+	require.Equal(t, jsonCert, actual)
+}

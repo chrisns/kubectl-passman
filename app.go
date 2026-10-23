@@ -149,17 +149,20 @@ type responseStatus struct {
 
 // promoteIDToken uses the id-token of a kubeconfig oidc auth-provider as the token.
 func (s *responseStatus) promoteIDToken() {
-	if s.Token == "" {
+	hasCert := s.ClientCertificateData != "" || s.ClientCertificateDataD != ""
+	if s.Token == "" && !hasCert {
 		s.Token = s.IDToken
 	}
 	s.IDToken = ""
 }
 
+const tokenChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~+/="
+
 // plainTokenToJSON wraps a bare token, such as an OIDC id-token, as JSON.
-// Anything that looks like JSON, or has white space inside, is returned as it is.
+// Anything with a character that a token never has, such as a quote, a bracket or white space, is returned as it is.
 func plainTokenToJSON(secret string) string {
 	trimmed := strings.TrimSpace(secret)
-	if trimmed == "" || strings.HasPrefix(trimmed, "{") || strings.ContainsAny(trimmed, " \t\r\n") {
+	if trimmed == "" || strings.Trim(trimmed, tokenChars) != "" {
 		return secret
 	}
 	wrapped, err := json.Marshal(responseStatus{Token: trimmed})

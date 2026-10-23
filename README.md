@@ -75,7 +75,9 @@ or the `id-token` key from the `auth-provider` config of your kube config:
 {"id-token":"eyJhbGciOiJSUzI1NiIs..."}
 ```
 
-passman does not refresh an `id-token`. When the token expires, store a new one.
+A bare token can only have letters, digits and `-._~+/=`. Passman removes white space around it.
+Passman ignores `refresh-token`, `client-id` and `client-secret`.
+Passman does not refresh an `id-token`. When the token expires, store a new one.
 For automatic refresh, use [kubelogin](https://github.com/int128/kubelogin).
 
 or for a key pair:

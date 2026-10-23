@@ -46,6 +46,17 @@ jobs:
   #       with:
   #         args: golangci-lint run --color=always
 
+  keepassxc-integration:
+    name: KeePassXC integration test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7
+        with:
+          go-version-file: './go.mod'
+      - run: sudo apt-get update && sudo apt-get install -y keepassxc
+      - run: go test -v -run Test_keepassxcReal
+
   test-build-publish:
     name: Test and Build
     runs-on: macOS-latest

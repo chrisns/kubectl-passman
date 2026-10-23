@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"os/signal"
+	"runtime"
 	"strings"
 
 	"golang.org/x/term"
@@ -36,16 +38,41 @@ var keepassxcRun = func(args []string, stdin string) (string, error) {
 	return outb.String(), nil
 }
 
+// keepassxcTerminal is the device that reads from the terminal, even when stdin is a pipe.
+func keepassxcTerminal() string {
+	if runtime.GOOS == "windows" {
+		return "CONIN$"
+	}
+	return "/dev/tty"
+}
+
 // keepassxcPrompt reads the database password from the terminal without echo.
+// It restores the terminal if the user interrupts the prompt.
 var keepassxcPrompt = func() (string, error) {
-	tty, err := os.OpenFile("/dev/tty", os.O_RDWR, 0)
+	tty, err := os.OpenFile(keepassxcTerminal(), os.O_RDWR, 0)
 	if err != nil {
 		return "", errors.New("no terminal to prompt for the database password, set " + keepassxcUnlockEnv)
 	}
 	defer tty.Close()
-	fmt.Fprint(tty, "Enter password to unlock KeePassXC database: ")
-	pw, err := term.ReadPassword(int(tty.Fd()))
-	fmt.Fprintln(tty)
+	fd := int(tty.Fd())
+	state, err := term.GetState(fd)
+	if err != nil {
+		return "", errors.New("no terminal to prompt for the database password, set " + keepassxcUnlockEnv)
+	}
+
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt)
+	defer signal.Stop(interrupt)
+	go func() {
+		if _, ok := <-interrupt; ok {
+			_ = term.Restore(fd, state)
+			os.Exit(130)
+		}
+	}()
+
+	fmt.Fprint(os.Stderr, "Enter password to unlock KeePassXC database: ")
+	pw, err := term.ReadPassword(fd)
+	fmt.Fprintln(os.Stderr)
 	return string(pw), err
 }
 

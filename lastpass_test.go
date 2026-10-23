@@ -61,12 +61,24 @@ func Test_lastpassSetterAdd(t *testing.T) {
 func Test_lastpassSetterERROR(t *testing.T) {
 	fakeLastpass(t, func(args []string) (string, error) {
 		if args[0] == "show" {
-			return "", errors.New("missing")
+			return "", errors.New(lastpassNotFound)
 		}
 		return "", errors.New("add failed")
 	})
 	err := lastpassSetter("item", "secret")
-	require.EqualError(t, err, "add failed (looking up the entry failed first: missing)")
+	require.EqualError(t, err, "add failed (looking up the entry failed first: "+lastpassNotFound+")")
+}
+
+func Test_lastpassSetterProbeFailureDoesNotAdd(t *testing.T) {
+	calls := fakeLastpass(t, func([]string) (string, error) { return "", errors.New("Error: Could not sync") })
+	require.EqualError(t, lastpassSetter("item", "secret"), "Error: Could not sync")
+	require.Len(t, *calls, 1)
+}
+
+func Test_lastpassGetterEmptyOutput(t *testing.T) {
+	fakeLastpass(t, func([]string) (string, error) { return "\n", nil })
+	_, err := lastpassGetter("item")
+	require.ErrorContains(t, err, "no password for item")
 }
 
 func Test_lastpassSetterEditERROR(t *testing.T) {

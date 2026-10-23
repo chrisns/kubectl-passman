@@ -42,7 +42,6 @@ keychain | [Mac OS Keychain](https://support.apple.com/en-gb/guide/keychain-acce
 gopass | [gopass](https://www.gopass.pw/) | `kubectl passman gopass [item] [token]`
 bitwarden | [Bitwarden](https://bitwarden.com/) <br> requires [bw cli](https://bitwarden.com/help/cli/) <br> see [Bitwarden](#bitwarden) | `kubectl passman bitwarden [item] [token]`
 keepassxc | [KeePassXC](https://keepassxc.org/) <br> requires [keepassxc-cli](https://keepassxc.org/docs/KeePassXC_UserGuide#_command_line_tool) <br> on Linux you can also use `keychain`, see [KeePassXC](#keepassxc) | `kubectl passman keepassxc [item] [token]`
-
 lastpass | [LastPass](https://www.lastpass.com/) <br> requires [lastpass-cli](https://github.com/lastpass/lastpass-cli) and `lpass login` first | `kubectl passman lastpass [item] [token]`
 
 ## Installation

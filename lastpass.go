@@ -31,8 +31,15 @@ func lastpassGetter(itemName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return strings.TrimRight(out, "\r\n"), nil
+	secret := strings.TrimRight(out, "\r\n")
+	if secret == "" {
+		return "", errors.New("lpass returned no password for " + itemName + ", check that exactly one entry has this name and that its password is set")
+	}
+	return secret, nil
 }
+
+// lastpassNotFound is what lpass prints when no entry has the name.
+const lastpassNotFound = "Could not find specified account"
 
 func lastpassSetter(itemName, secret string) error {
 	if strings.ContainsAny(secret, "\r\n") {
@@ -40,6 +47,10 @@ func lastpassSetter(itemName, secret string) error {
 	}
 	// lpass edit fails when the entry is missing, so look it up to choose edit or add.
 	_, probeErr := lastpassRun([]string{"show", "--id", "--", itemName}, "")
+	// Only add when the entry is missing, any other failure would create a duplicate entry.
+	if probeErr != nil && !strings.Contains(probeErr.Error(), lastpassNotFound) {
+		return probeErr
+	}
 	var err error
 	if probeErr == nil {
 		_, err = lastpassRun([]string{"edit", "--non-interactive", "--sync=now", "--password", "--", itemName}, secret+"\n")

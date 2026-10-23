@@ -129,9 +129,11 @@ kubectl passman bitwarden kubectl-prod-user '{"token":"00000000-0000-0000-0000-0
 `kubectl-passman` reads `BW_SESSION` from its environment.
 It does not prompt, so a locked vault gives an error.
 If the item exists, `kubectl-passman` changes only its password.
-If more than one item has the same name, `bw` fails. Use a unique name.
+`kubectl-passman` matches the item name exactly, and it ignores login items with similar names.
+If more than one login item has the same name, `kubectl-passman` fails. Use a unique name.
 To use it in your kube config, add `--exec-arg=bitwarden` to `kubectl config set-credentials`.
-To pass the session key, add `--exec-env=BW_SESSION=...` or export it in the shell that runs `kubectl`.
+Export `BW_SESSION` in the shell that runs `kubectl`.
+Do not use `--exec-env` for it, because that writes the session key in plain text to your kube config.
 
 ### KeePassXC
 

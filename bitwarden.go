@@ -29,12 +29,46 @@ var bitwardenRun = func(args []string, stdin string) (string, error) {
 	return outb.String(), nil
 }
 
+// bitwardenFind returns the one login item with exactly this name, or nil if there is none.
+// The bw get command matches names as a search, so it can return a different item.
+func bitwardenFind(itemName string) (map[string]interface{}, error) {
+	out, err := bitwardenRun([]string{"list", "items", "--search=" + itemName}, "")
+	if err != nil {
+		return nil, err
+	}
+	var items []map[string]interface{}
+	if err := json.Unmarshal([]byte(out), &items); err != nil {
+		return nil, fmt.Errorf("cannot read the Bitwarden item list: %w", err)
+	}
+	var found []map[string]interface{}
+	for _, item := range items {
+		if name, _ := item["name"].(string); name != itemName {
+			continue
+		}
+		if t, _ := item["type"].(float64); t != 1 {
+			continue
+		}
+		found = append(found, item)
+	}
+	if len(found) > 1 {
+		return nil, fmt.Errorf("%d Bitwarden login items are named %q, use a unique name", len(found), itemName)
+	}
+	if len(found) == 0 {
+		return nil, nil
+	}
+	return found[0], nil
+}
+
 func bitwardenGetter(itemName string) (string, error) {
-	out, err := bitwardenRun([]string{"get", "password", "--", itemName}, "")
+	item, err := bitwardenFind(itemName)
 	if err != nil {
 		return "", err
 	}
-	secret := strings.TrimRight(out, "\r\n")
+	if item == nil {
+		return "", fmt.Errorf("no Bitwarden login item is named %q", itemName)
+	}
+	login, _ := item["login"].(map[string]interface{})
+	secret, _ := login["password"].(string)
 	if secret == "" {
 		return "", errors.New("the Bitwarden item has no password")
 	}
@@ -51,11 +85,11 @@ func bitwardenEncode(item map[string]interface{}) (string, error) {
 }
 
 func bitwardenSetter(itemName, secret string) error {
-	out, err := bitwardenRun([]string{"get", "item", "--", itemName}, "")
+	item, err := bitwardenFind(itemName)
 	if err != nil {
-		if !strings.Contains(err.Error(), "Not found") {
-			return err
-		}
+		return err
+	}
+	if item == nil {
 		encoded, err := bitwardenEncode(map[string]interface{}{
 			"type":  1,
 			"name":  itemName,
@@ -68,16 +102,9 @@ func bitwardenSetter(itemName, secret string) error {
 		return err
 	}
 
-	item := map[string]interface{}{}
-	if err := json.Unmarshal([]byte(out), &item); err != nil {
-		return fmt.Errorf("cannot read the Bitwarden item: %w", err)
-	}
 	id, _ := item["id"].(string)
 	if id == "" {
 		return errors.New("the Bitwarden item has no id")
-	}
-	if t, _ := item["type"].(float64); t != 1 {
-		return errors.New("the Bitwarden item is not a login item")
 	}
 	login, _ := item["login"].(map[string]interface{})
 	if login == nil {

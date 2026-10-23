@@ -90,6 +90,8 @@ func Test_commands(t *testing.T) {
 	require.Equal(t, "keychain", app.Commands[0].Name)
 	require.Equal(t, "1password", app.Commands[1].Name)
 	require.Equal(t, "gopass", app.Commands[2].Name)
+	require.Equal(t, "bitwarden", app.Commands[3].Name)
+	require.Equal(t, "keepassxc", app.Commands[4].Name)
 }
 
 func Test_formatValidatorPlainToken(t *testing.T) {

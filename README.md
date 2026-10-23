@@ -40,6 +40,7 @@ Provider | Supports | Example command
 keychain | [Mac OS Keychain](https://support.apple.com/en-gb/guide/keychain-access/kyca1083/mac) <br> [GNOME Keyring](https://wiki.gnome.org/Projects/GnomeKeyring) <br> [Windows Credential Manager](http://blogs.msdn.com/b/visualstudioalm/archive/2015/12/08/announcing-the-git-credential-manager-for-windows-1-0.aspx) | `kubectl passman keychain [item] [token]`
 1password | [1password](https://1password.com/) <br> requires [1password cli](https://1password.com/downloads/command-line/) | `kubectl passman 1password [item] [token]`
 gopass | [gopass](https://www.gopass.pw/) | `kubectl passman gopass [item] [token]`
+bitwarden | [Bitwarden](https://bitwarden.com/) <br> requires [bw cli](https://bitwarden.com/help/cli/) <br> see [Bitwarden](#bitwarden) | `kubectl passman bitwarden [item] [token]`
 keepassxc | [KeePassXC](https://keepassxc.org/) <br> requires [keepassxc-cli](https://keepassxc.org/docs/KeePassXC_UserGuide#_command_line_tool) <br> on Linux you can also use `keychain`, see [KeePassXC](#keepassxc) | `kubectl passman keepassxc [item] [token]`
 
 ## Installation
@@ -127,6 +128,29 @@ kubectl config set-credentials \
  --exec-arg=keychain \ # or 1password
  --exec-arg=kubectl-prod-user # name of [item-name] you used when you wrote to the password manager
 ```
+
+### Bitwarden
+
+The `bitwarden` provider runs the [bw cli](https://bitwarden.com/help/cli/).
+It stores the credentials in the password field of a login item, and the item name is `[item-name]`.
+The alias `bw` also works.
+
+Log in and unlock the vault first, then export the session key:
+
+```bash
+bw login
+export BW_SESSION="$(bw unlock --raw)"
+kubectl passman bitwarden kubectl-prod-user '{"token":"00000000-0000-0000-0000-000000000000"}'
+```
+
+`kubectl-passman` reads `BW_SESSION` from its environment.
+It does not prompt, so a locked vault gives an error.
+If the item exists, `kubectl-passman` changes only its password.
+`kubectl-passman` matches the item name exactly, and it ignores login items with similar names.
+If more than one login item has the same name, `kubectl-passman` fails. Use a unique name.
+To use it in your kube config, add `--exec-arg=bitwarden` to `kubectl config set-credentials`.
+Export `BW_SESSION` in the shell that runs `kubectl`.
+Do not use `--exec-env` for it, because that writes the session key in plain text to your kube config.
 
 ### KeePassXC
 

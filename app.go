@@ -55,6 +55,13 @@ func cliCommands() {
 			ArgsUsage: "[item-name]",
 			Action:    cliHandler,
 		},
+		{
+			Name:      "lastpass",
+			Usage:     "Use LastPass with lpass",
+			Aliases:   []string{"lpass"},
+			ArgsUsage: "[item-name]",
+			Action:    cliHandler,
+		},
 	}
 }
 
@@ -113,6 +120,8 @@ func write(handler, itemName, secret string) error {
 		return bitwardenSetter(itemName, validSecret)
 	case "keepassxc":
 		return keepassxcSetter(itemName, validSecret)
+	case "lastpass":
+		return lastpassSetter(itemName, validSecret)
 	}
 	return nil
 }
@@ -133,6 +142,8 @@ func read(handler, itemName string) error {
 		secret, err = bitwardenGetter(itemName)
 	case "keepassxc":
 		secret, err = keepassxcGetter(itemName)
+	case "lastpass":
+		secret, err = lastpassGetter(itemName)
 	}
 
 	if err != nil {

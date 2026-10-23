@@ -91,3 +91,65 @@ func Test_commands(t *testing.T) {
 	require.Equal(t, "1password", app.Commands[1].Name)
 	require.Equal(t, "gopass", app.Commands[2].Name)
 }
+
+func Test_formatValidatorPlainToken(t *testing.T) {
+	actual, err := formatValidator("  eyJhbGciOi.payload.sig\n")
+	require.Nil(t, err)
+	require.Equal(t, `{"token":"eyJhbGciOi.payload.sig"}`, actual)
+}
+
+func Test_formatValidatorIDToken(t *testing.T) {
+	actual, err := formatValidator(`{"id-token":"abc","refresh-token":"r","client-id":"k8s"}`)
+	require.Nil(t, err)
+	require.Equal(t, `{"token":"abc"}`, actual)
+}
+
+func Test_formatValidatorTokenWinsOverIDToken(t *testing.T) {
+	actual, err := formatValidator(`{"token":"a","id-token":"b"}`)
+	require.Nil(t, err)
+	require.Equal(t, `{"token":"a"}`, actual)
+}
+
+func Test_formatValidatorTextWithSpacesFails(t *testing.T) {
+	_, err := formatValidator("not a token")
+	require.NotNil(t, err)
+}
+
+func Test_plainTokenToJSON(t *testing.T) {
+	require.Equal(t, jsonToken, plainTokenToJSON(jsonToken))
+	require.Equal(t, "", plainTokenToJSON(""))
+	require.Equal(t, "a b", plainTokenToJSON("a b"))
+	require.Equal(t, `{"token":"00000"}`, plainTokenToJSON("00000\n"))
+}
+
+func Test_promoteIDToken(t *testing.T) {
+	s := &responseStatus{IDToken: "x"}
+	s.promoteIDToken()
+	require.Equal(t, "x", s.Token)
+	require.Equal(t, "", s.IDToken)
+}
+
+func Test_plainTokenToJSONLeavesNonTokensAlone(t *testing.T) {
+	for _, in := range []string{`"abc"`, `["a"]`, `[1,2]`, "tok\nen", "a\tb"} {
+		require.Equal(t, in, plainTokenToJSON(in))
+		_, err := formatValidator(in)
+		require.NotNil(t, err, in)
+	}
+}
+
+func Test_plainTokenToJSONCRLF(t *testing.T) {
+	require.Equal(t, `{"token":"abc"}`, plainTokenToJSON("abc\r\n"))
+}
+
+func Test_promoteIDTokenIgnoredWithCert(t *testing.T) {
+	s := &responseStatus{IDToken: "x", ClientCertificateData: "c", ClientKeyData: "k"}
+	s.promoteIDToken()
+	require.Equal(t, "", s.Token)
+	require.Equal(t, "", s.IDToken)
+}
+
+func Test_formatValidatorCertsUnchangedByWrapper(t *testing.T) {
+	actual, err := formatValidator(jsonCert)
+	require.Nil(t, err)
+	require.Equal(t, jsonCert, actual)
+}

@@ -41,6 +41,13 @@ func cliCommands() {
 			Action:    cliHandler,
 		},
 		{
+			Name:      "bitwarden",
+			Usage:     "Use Bitwarden with the bw cli",
+			Aliases:   []string{"bw"},
+			ArgsUsage: "[item-name]",
+			Action:    cliHandler,
+		},
+		{
 			Name:      "keepassxc",
 			Usage:     "Use KeePassXC with keepassxc-cli",
 			Aliases:   []string{"keepass"},
@@ -101,6 +108,8 @@ func write(handler, itemName, secret string) error {
 		return opsetter(itemName, validSecret)
 	case "gopass":
 		return gopassSetter(itemName, validSecret)
+	case "bitwarden":
+		return bitwardenSetter(itemName, validSecret)
 	case "keepassxc":
 		return keepassxcSetter(itemName, validSecret)
 	}
@@ -119,6 +128,8 @@ func read(handler, itemName string) error {
 		secret, err = opgetter(itemName)
 	case "gopass":
 		secret, err = gopassGetter(itemName)
+	case "bitwarden":
+		secret, err = bitwardenGetter(itemName)
 	case "keepassxc":
 		secret, err = keepassxcGetter(itemName)
 	}

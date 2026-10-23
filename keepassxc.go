@@ -12,10 +12,10 @@ import (
 )
 
 const (
-	keepassxcDatabaseEnv   = "KUBECTL_PASSMAN_KEEPASSXC_DB"
-	keepassxcKeyFileEnv    = "KUBECTL_PASSMAN_KEEPASSXC_KEYFILE"
-	keepassxcPasswordEnv   = "KUBECTL_PASSMAN_KEEPASSXC_PASSWORD"
-	keepassxcNoPasswordEnv = "KUBECTL_PASSMAN_KEEPASSXC_NO_PASSWORD"
+	keepassxcDatabaseEnv = "KUBECTL_PASSMAN_KEEPASSXC_DB"
+	keepassxcKeyFileEnv  = "KUBECTL_PASSMAN_KEEPASSXC_KEYFILE"
+	keepassxcUnlockEnv   = "KUBECTL_PASSMAN_KEEPASSXC_PASSWORD"
+	keepassxcKeyOnlyEnv  = "KUBECTL_PASSMAN_KEEPASSXC_NO_PASSWORD"
 )
 
 // keepassxcRun runs keepassxc-cli with the given arguments and stdin.
@@ -29,7 +29,7 @@ var keepassxcRun = func(args []string, stdin string) (string, error) {
 	if err != nil {
 		msg := strings.TrimSpace(errb.String())
 		if msg == "" {
-			return "", err
+			return "", fmt.Errorf("%w: check the database path, the unlock credentials and the entry name", err)
 		}
 		return "", fmt.Errorf("%w: %s", err, msg)
 	}
@@ -40,7 +40,7 @@ var keepassxcRun = func(args []string, stdin string) (string, error) {
 var keepassxcPrompt = func() (string, error) {
 	tty, err := os.OpenFile("/dev/tty", os.O_RDWR, 0)
 	if err != nil {
-		return "", errors.New("no terminal to prompt for the database password, set " + keepassxcPasswordEnv)
+		return "", errors.New("no terminal to prompt for the database password, set " + keepassxcUnlockEnv)
 	}
 	defer tty.Close()
 	fmt.Fprint(tty, "Enter password to unlock KeePassXC database: ")
@@ -50,31 +50,31 @@ var keepassxcPrompt = func() (string, error) {
 }
 
 type keepassxcConfig struct {
-	database   string
-	keyFile    string
-	noPassword bool
-	password   string
+	database string
+	keyFile  string
+	keyOnly  bool
+	unlock   string
 }
 
 func keepassxcLoadConfig() (*keepassxcConfig, error) {
 	cfg := &keepassxcConfig{
-		database:   os.Getenv(keepassxcDatabaseEnv),
-		keyFile:    os.Getenv(keepassxcKeyFileEnv),
-		noPassword: os.Getenv(keepassxcNoPasswordEnv) != "",
-		password:   os.Getenv(keepassxcPasswordEnv),
+		database: os.Getenv(keepassxcDatabaseEnv),
+		keyFile:  os.Getenv(keepassxcKeyFileEnv),
+		keyOnly:  os.Getenv(keepassxcKeyOnlyEnv) != "",
+		unlock:   os.Getenv(keepassxcUnlockEnv),
 	}
 	if cfg.database == "" {
 		return nil, errors.New("please set " + keepassxcDatabaseEnv + " to the path of the KeePassXC database")
 	}
-	if cfg.noPassword && cfg.keyFile == "" {
-		return nil, errors.New(keepassxcNoPasswordEnv + " needs " + keepassxcKeyFileEnv)
+	if cfg.keyOnly && cfg.keyFile == "" {
+		return nil, errors.New(keepassxcKeyOnlyEnv + " needs " + keepassxcKeyFileEnv)
 	}
-	if !cfg.noPassword && cfg.password == "" {
+	if !cfg.keyOnly && cfg.unlock == "" {
 		pw, err := keepassxcPrompt()
 		if err != nil {
 			return nil, err
 		}
-		cfg.password = pw
+		cfg.unlock = pw
 	}
 	return cfg, nil
 }
@@ -82,7 +82,7 @@ func keepassxcLoadConfig() (*keepassxcConfig, error) {
 // args builds the keepassxc-cli arguments, the database and entry come last.
 func (c *keepassxcConfig) args(command, itemName string, extra ...string) []string {
 	args := []string{command, "--quiet"}
-	if c.noPassword {
+	if c.keyOnly {
 		args = append(args, "--no-password")
 	}
 	if c.keyFile != "" {
@@ -95,8 +95,8 @@ func (c *keepassxcConfig) args(command, itemName string, extra ...string) []stri
 // stdin gives the input that keepassxc-cli reads after its own arguments.
 func (c *keepassxcConfig) stdin(lines ...string) string {
 	var in []string
-	if !c.noPassword {
-		in = append(in, c.password)
+	if !c.keyOnly {
+		in = append(in, c.unlock)
 	}
 	in = append(in, lines...)
 	return strings.Join(in, "\n") + "\n"

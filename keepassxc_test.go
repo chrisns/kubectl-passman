@@ -24,8 +24,8 @@ func keepassxcFake(t *testing.T, calls *[]keepassxcCall, fn func(args []string) 
 func keepassxcEnv(t *testing.T) {
 	t.Setenv(keepassxcDatabaseEnv, "/db.kdbx")
 	t.Setenv(keepassxcKeyFileEnv, "")
-	t.Setenv(keepassxcPasswordEnv, "dbpass")
-	t.Setenv(keepassxcNoPasswordEnv, "")
+	t.Setenv(keepassxcUnlockEnv, "dbpass")
+	t.Setenv(keepassxcKeyOnlyEnv, "")
 }
 
 func Test_keepassxcGetterOK(t *testing.T) {
@@ -43,8 +43,8 @@ func Test_keepassxcGetterOK(t *testing.T) {
 
 func Test_keepassxcGetterKeyFileNoPassword(t *testing.T) {
 	keepassxcEnv(t)
-	t.Setenv(keepassxcPasswordEnv, "")
-	t.Setenv(keepassxcNoPasswordEnv, "1")
+	t.Setenv(keepassxcUnlockEnv, "")
+	t.Setenv(keepassxcKeyOnlyEnv, "1")
 	t.Setenv(keepassxcKeyFileEnv, "/db.key")
 	var calls []keepassxcCall
 	keepassxcFake(t, &calls, func([]string) (string, error) { return "x", nil })
@@ -63,14 +63,14 @@ func Test_keepassxcGetterNoDatabase(t *testing.T) {
 
 func Test_keepassxcNoPasswordNeedsKeyFile(t *testing.T) {
 	keepassxcEnv(t)
-	t.Setenv(keepassxcNoPasswordEnv, "1")
+	t.Setenv(keepassxcKeyOnlyEnv, "1")
 	_, err := keepassxcGetter("item")
 	require.ErrorContains(t, err, keepassxcKeyFileEnv)
 }
 
 func Test_keepassxcGetterPrompt(t *testing.T) {
 	keepassxcEnv(t)
-	t.Setenv(keepassxcPasswordEnv, "")
+	t.Setenv(keepassxcUnlockEnv, "")
 	orig := keepassxcPrompt
 	t.Cleanup(func() { keepassxcPrompt = orig })
 	keepassxcPrompt = func() (string, error) { return "typed", nil }

@@ -63,6 +63,21 @@ You need to JSON encode the credentials so that should look something like:
 {"token":"00000000-0000-0000-0000-000000000000"}
 ```
 
+or just the token on its own, for example an OIDC `id-token` from Dex:
+
+```
+eyJhbGciOiJSUzI1NiIs...
+```
+
+or the `id-token` key from the `auth-provider` config of your kube config:
+
+```json
+{"id-token":"eyJhbGciOiJSUzI1NiIs..."}
+```
+
+passman does not refresh an `id-token`. When the token expires, store a new one.
+For automatic refresh, use [kubelogin](https://github.com/int128/kubelogin).
+
 or for a key pair:
 
 ```json

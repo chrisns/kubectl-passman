@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/urfave/cli"
 
@@ -127,10 +128,11 @@ func read(handler, itemName string) error {
 		return err
 	}
 	res := &response{}
-	err = json.Unmarshal([]byte(secret), &res.Status)
+	err = json.Unmarshal([]byte(plainTokenToJSON(secret)), &res.Status)
 	if err != nil {
 		return err
 	}
+	res.Status.promoteIDToken()
 	out, err = formatResponse(res)
 	fmt.Println(out)
 	return err
@@ -138,11 +140,35 @@ func read(handler, itemName string) error {
 
 type responseStatus struct {
 	Token                  string `json:"token,omitempty"`
+	IDToken                string `json:"id-token,omitempty"`
 	ClientCertificateData  string `json:"clientCertificateData,omitempty"`
 	ClientCertificateDataD string `json:"client-certificate-data,omitempty"`
 	ClientKeyData          string `json:"clientKeyData,omitempty"`
 	ClientKeyDataD         string `json:"client-key-data,omitempty"`
 }
+
+// promoteIDToken uses the id-token of a kubeconfig oidc auth-provider as the token.
+func (s *responseStatus) promoteIDToken() {
+	if s.Token == "" {
+		s.Token = s.IDToken
+	}
+	s.IDToken = ""
+}
+
+// plainTokenToJSON wraps a bare token, such as an OIDC id-token, as JSON.
+// Anything that looks like JSON, or has white space inside, is returned as it is.
+func plainTokenToJSON(secret string) string {
+	trimmed := strings.TrimSpace(secret)
+	if trimmed == "" || strings.HasPrefix(trimmed, "{") || strings.ContainsAny(trimmed, " \t\r\n") {
+		return secret
+	}
+	wrapped, err := json.Marshal(responseStatus{Token: trimmed})
+	if err != nil {
+		return secret
+	}
+	return string(wrapped)
+}
+
 type response struct {
 	APIVersion string         `default:"client.authentication.k8s.io/v1beta1" json:"apiVersion"`
 	Kind       string         `default:"ExecCredential" json:"kind"`
@@ -151,12 +177,13 @@ type response struct {
 
 func formatValidator(secret string) (string, error) {
 	s := &responseStatus{}
-	data := []byte(secret)
+	data := []byte(plainTokenToJSON(secret))
 
 	err := json.Unmarshal(data, s)
 	if err != nil {
 		return "", err
 	}
+	s.promoteIDToken()
 
 	switch {
 	case len(s.ClientCertificateDataD) > 0 && len(s.ClientKeyDataD) > 0:

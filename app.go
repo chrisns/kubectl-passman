@@ -40,6 +40,13 @@ func cliCommands() {
 			ArgsUsage: "[item-name]",
 			Action:    cliHandler,
 		},
+		{
+			Name:      "keepassxc",
+			Usage:     "Use KeePassXC with keepassxc-cli",
+			Aliases:   []string{"keepass"},
+			ArgsUsage: "[item-name]",
+			Action:    cliHandler,
+		},
 	}
 }
 
@@ -94,6 +101,8 @@ func write(handler, itemName, secret string) error {
 		return opsetter(itemName, validSecret)
 	case "gopass":
 		return gopassSetter(itemName, validSecret)
+	case "keepassxc":
+		return keepassxcSetter(itemName, validSecret)
 	}
 	return nil
 }
@@ -110,6 +119,8 @@ func read(handler, itemName string) error {
 		secret, err = opgetter(itemName)
 	case "gopass":
 		secret, err = gopassGetter(itemName)
+	case "keepassxc":
+		secret, err = keepassxcGetter(itemName)
 	}
 
 	if err != nil {

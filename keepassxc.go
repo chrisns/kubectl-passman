@@ -123,9 +123,13 @@ func keepassxcSetter(itemName, secret string) error {
 		return err
 	}
 	command := "add"
-	if _, err := keepassxcRun(cfg.args("show", itemName, "--attributes", "Title"), cfg.stdin()); err == nil {
+	_, probeErr := keepassxcRun(cfg.args("show", itemName, "--attributes", "Title"), cfg.stdin())
+	if probeErr == nil {
 		command = "edit"
 	}
 	_, err = keepassxcRun(cfg.args(command, itemName, "--password-prompt"), cfg.stdin(secret))
+	if err != nil && probeErr != nil {
+		return fmt.Errorf("%w (looking up the entry failed first: %v)", err, probeErr)
+	}
 	return err
 }

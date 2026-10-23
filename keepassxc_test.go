@@ -121,7 +121,7 @@ func Test_keepassxcSetterERROR(t *testing.T) {
 		}
 		return "", errors.New("add failed")
 	})
-	require.Equal(t, "add failed", keepassxcSetter("item", jsonToken).Error())
+	require.Equal(t, "add failed (looking up the entry failed first: missing)", keepassxcSetter("item", jsonToken).Error())
 }
 
 func Test_keepassxcSetterRejectsLineBreak(t *testing.T) {

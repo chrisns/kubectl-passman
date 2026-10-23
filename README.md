@@ -131,21 +131,24 @@ Variable | Meaning
 `KUBECTL_PASSMAN_KEEPASSXC_DB` | Path to the `.kdbx` file (required)
 `KUBECTL_PASSMAN_KEEPASSXC_KEYFILE` | Path to a key file (optional)
 `KUBECTL_PASSMAN_KEEPASSXC_PASSWORD` | Database password (optional, see the warning below)
-`KUBECTL_PASSMAN_KEEPASSXC_NO_PASSWORD` | Set to any value for a database that has a key file and no password
+`KUBECTL_PASSMAN_KEEPASSXC_NO_PASSWORD` | Set to any non-empty value for a database that has a key file and no password
 
 If you set no password, `kubectl-passman` prompts for it on the terminal each time.
-Use `exec` `env` entries in your kube config to set the variables for `kubectl`.
+The prompt needs `/dev/tty`, so on Windows you must set `KUBECTL_PASSMAN_KEEPASSXC_PASSWORD` or use a key file with `KUBECTL_PASSMAN_KEEPASSXC_NO_PASSWORD`.
+`kubectl` does not pass your shell variables to the plugin, so set them with `--exec-env` as shown below.
 Do not put the database password in a file that other users can read.
+You can also write `keepass` instead of `keepassxc`.
 
 ```bash
-export KUBECTL_PASSMAN_KEEPASSXC_DB=~/Passwords.kdbx
+export KUBECTL_PASSMAN_KEEPASSXC_DB=~/Passwords.kdbx # needed to write the item
 kubectl passman keepassxc kubectl-prod-user '{"token":"00000000-0000-0000-0000-000000000000"}'
 kubectl config set-credentials \
   kubectl-prod-user \
  --exec-api-version=client.authentication.k8s.io/v1beta1 \
  --exec-command=kubectl-passman \
  --exec-arg=keepassxc \
- --exec-arg=kubectl-prod-user
+ --exec-arg=kubectl-prod-user \
+ --exec-env=KUBECTL_PASSMAN_KEEPASSXC_DB=$HOME/Passwords.kdbx
 ```
 
 ## Build

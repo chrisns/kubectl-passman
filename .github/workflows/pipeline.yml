@@ -91,6 +91,8 @@ jobs:
             ARCH: amd64
           - OS: windows
             ARCH: arm64
+          - OS: windows
+            ARCH: arm
           - OS: freebsd
             ARCH: arm64
           - OS: plan9

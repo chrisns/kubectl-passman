@@ -44,6 +44,8 @@ bitwarden | [Bitwarden](https://bitwarden.com/) <br> requires [bw cli](https://b
 keepassxc | [KeePassXC](https://keepassxc.org/) <br> requires [keepassxc-cli](https://keepassxc.org/docs/KeePassXC_UserGuide#_command_line_tool) <br> on Linux you can also use `keychain`, see [KeePassXC](#keepassxc) | `kubectl passman keepassxc [item] [token]`
 lastpass | [LastPass](https://www.lastpass.com/) <br> requires [lastpass-cli](https://github.com/lastpass/lastpass-cli) and `lpass login` first | `kubectl passman lastpass [item] [token]`
 
+The `lpass` agent logs out after a time, set `LPASS_AGENT_TIMEOUT` to change it. Each entry name must be unique.
+
 ## Installation
 
 ```bash

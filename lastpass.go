@@ -35,6 +35,9 @@ func lastpassGetter(itemName string) (string, error) {
 	if secret == "" {
 		return "", errors.New("lpass returned no password for " + itemName + ", check that exactly one entry has this name and that its password is set")
 	}
+	if strings.ContainsAny(secret, "\r\n") {
+		return "", errors.New("lpass returned more than one line for " + itemName + ", the entry name must be unique")
+	}
 	return secret, nil
 }
 

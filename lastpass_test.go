@@ -75,6 +75,12 @@ func Test_lastpassSetterProbeFailureDoesNotAdd(t *testing.T) {
 	require.Len(t, *calls, 1)
 }
 
+func Test_lastpassGetterSeveralEntries(t *testing.T) {
+	fakeLastpass(t, func([]string) (string, error) { return "one\ntwo\n", nil })
+	_, err := lastpassGetter("item")
+	require.ErrorContains(t, err, "the entry name must be unique")
+}
+
 func Test_lastpassGetterEmptyOutput(t *testing.T) {
 	fakeLastpass(t, func([]string) (string, error) { return "\n", nil })
 	_, err := lastpassGetter("item")
